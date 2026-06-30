@@ -1,0 +1,16 @@
+.headling {
+    background-color: #00910E;
+    color: #fff;
+    border: #00910E;
+    bottom: -15px;
+    right: 2rem;
+    font-size: 16px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 12rem;
+    margin-left: 8rem;
+    margin-top: -2rem;
+    position: relative;
+    margin-bottom: 2rem;
+}

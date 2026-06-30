@@ -1,0 +1,29 @@
+.news-card:hover {
+  box-shadow: 0 0 10px 0 #0B6000;
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+.news-main {
+  height: 80vh;
+}
+
+.headline {
+  background-color: #00910E;
+  color: #fff;
+  border: #00910E;
+  position: absolute;
+  bottom: -15px;
+  right: 2rem;
+  font-size: 16px;
+  padding: 5px 15px;
+  border-radius: 5px;
+}
+
+.headline:hover {
+  background-color: #0B6000;
+}
+
+.container {
+  position: relative;
+}

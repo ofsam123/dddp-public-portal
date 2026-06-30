@@ -1,0 +1,43 @@
+.overview-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.overview-image {
+    width: 50%;
+    height: auto;
+    margin-top: 1rem;
+}
+
+.overview-text {
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .overview-container {
+        flex-direction: column;
+    }
+
+    .overview-image {
+        width: 100%; 
+        margin-right: 0;
+    }
+}
+
+/* surface pro dimension */
+@media (max-width: 1024px) {
+    .overview-container {
+        flex-direction: column;
+    }
+
+    .overview-image {
+        width: 80%;
+        height: auto;
+        margin-top: 3rem;
+        margin: 0 auto;
+    }
+
+}

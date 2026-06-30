@@ -1,0 +1,196 @@
+.meteo-desc {
+    width: 70%;
+    margin: 0 auto;
+    text-justify: inter-word;
+    text-align: justify;
+}
+
+.meteo-desc h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.all-container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    zoom: 1;
+}
+
+.all-container:after {
+    content: " ";
+    clear: both;
+    display: block;
+    overflow: hidden;
+    height: 0;
+}
+
+@media (min-width: 768px) {
+    .all-container {
+        width: 750px;
+    }
+}
+
+@media (min-width: 992px) {
+    .all-container {
+        width: 970px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .all-container {
+        width: 92%;
+        margin: 0 auto;
+    }
+}
+
+.container-fluid {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    zoom: 1;
+}
+
+.container-fluid:after {
+    content: " ";
+    clear: both;
+    display: block;
+    overflow: hidden;
+    height: 0;
+}
+
+.all-forecast-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 5rem;
+    margin-bottom: -25px;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.all-forecast-container .all-forecast {
+    display: flex;
+    vertical-align: top;
+    flex-direction: column;
+    margin-right: 2rem;
+    background: #323544;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.all-forecast-container .all-forecast:last-child {
+    margin-right: 0;
+}
+
+.all-forecast-container .all-forecast:nth-child(even) {
+    background-color: #262936;
+}
+
+@media screen and (max-width: 990px) {
+    .all-forecast-container .all-forecast {
+        flex: 1;
+        margin: 10px;
+        max-width: calc(33.3333% - 20px);
+    }
+}
+
+.all-forecast-container .all-forecast.all-today {
+    width: 230px !important;
+}
+
+.all-forecast-container .all-forecast.all-today .all-forecast-header {
+    zoom: 1;
+}
+
+.all-forecast-container .all-forecast.all-today .all-forecast-header:after {
+    content: " ";
+    clear: both;
+    display: block;
+    overflow: hidden;
+    height: 0;
+}
+
+.all-forecast-container .all-forecast.all-today .all-forecast-header .all-day {
+    float: left;
+}
+
+.all-forecast-container .all-forecast.all-today .all-forecast-header .all-date {
+    float: right;
+}
+
+.all-forecast-container .all-forecast.all-today .all-forecast-content {
+    text-align: left;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+
+.all-forecast-container .all-forecast.all-today .all-location {
+    font-size: 18px;
+    font-size: 1.2857142857em;
+    font-weight: 400;
+}
+
+.all-forecast-container .all-forecast.all-today .all-degree .all-num,
+.all-forecast-container .all-forecast.all-today .all-degree .all-forecast-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.all-forecast-container .all-forecast.all-today .all-degree .all-num {
+    font-size: 90px;
+    font-size: 6.4285714286rem;
+    margin-right: 30px;
+}
+
+.all-forecast-container .all-forecast.all-today span {
+    margin-right: 20px;
+}
+
+.all-forecast-container .all-forecast.all-today span img {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+@media screen and (max-width: 990px) {
+    .all-forecast-container .all-forecast.all-today {
+        display: block;
+        width: 100%;
+    }
+}
+
+.all-forecast-container .all-forecast .all-forecast-header {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    text-align: center;
+    font-weight: 400;
+}
+
+.all-forecast-container .all-forecast .all-forecast-icon {
+    height: 50px;
+}
+
+.all-forecast-container .all-forecast .all-forecast-content {
+    padding: 10px 10px 10px;
+    text-align: center;
+}
+
+.all-forecast-container .all-forecast .all-forecast-content .all-forecast-icon {
+    margin-bottom: 20px;
+}
+
+.all-forecast-container .all-forecast .all-forecast-content .all-degree {
+    font-size: 24px;
+    font-size: 1.7142857143em;
+    color: white;
+    font-weight: 700;
+}
+
+.all-forecast-container .all-forecast .all-forecast-content small {
+    font-size: 16px;
+    font-size: 1.1428571429em;
+}

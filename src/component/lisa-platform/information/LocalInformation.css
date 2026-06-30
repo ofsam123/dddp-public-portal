@@ -1,0 +1,117 @@
+.card-style{
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid #fff !important;
+}
+
+.card-style:hover{
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+    border: 1px solid #fff !important;
+}
+
+/* CSS for the eye icon with background color and tooltip */
+.card-style .read-more-icon, .card-style .share-icon {
+    position: absolute;
+    bottom: 20px;
+    right: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.6s ease-in-out;
+    background-color: #0B6000; 
+    padding: 7px 10px 5px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.read-more-icon {
+    position: absolute;
+    bottom: 20px;
+    right: -50px; 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.6s ease-in-out;
+    background-color: #0B6000; 
+    padding: 7px 10px 5px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.share-icon {
+    position: absolute;
+    bottom: 20px;
+    right: -50px; 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.6s ease-in-out;
+    background-color: #0B6000; 
+    padding: 7px 10px 5px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-style:hover .read-more-icon {
+    right: 20px; /* End position on the card */
+    opacity: 1;
+}
+
+.card-style:hover .share-icon {
+    right: 70px; /* End position on the card */
+    opacity: 1;
+}
+
+.card-style:hover .card-content {
+    filter: blur(1.5px); 
+}
+
+.read-more-icon svg {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.share-icon svg {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.tooltip {
+    position: absolute;
+    right: 110%; /* Position to the left of the icon */
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none; /* Prevent tooltip from blocking hover events */
+    margin-right: 2rem;
+}
+
+.share-icon:hover .tooltip {
+    opacity: 1; /* Show tooltip on icon hover */
+}
+
+.read-more-icon:hover .tooltip {
+    opacity: 1; /* Show tooltip on icon hover */
+}

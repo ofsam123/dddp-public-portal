@@ -1,0 +1,11 @@
+.dimension-card:hover{
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+    border: 1px solid #0B6000 !important;
+}
+
+.dimension-card-title {
+    color: #0B6000 !important;
+    margin-right: 2rem;
+}

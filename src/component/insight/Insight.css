@@ -1,0 +1,16 @@
+.custom-tabs .ant-tabs-tab {
+    margin-right: 8rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* .custom-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #0B6000;
+} */
+
+.insight-main{
+    text-align: center;
+    color: #0B6000;
+    font-size: 4rem;
+    margin-bottom: '5rem';
+    margin-top: 8rem;
+}
