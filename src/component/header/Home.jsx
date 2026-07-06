@@ -1,39 +1,28 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import NavBar from './NavBar'
 import Platform from '../platform/Platform'
 import Dimensions from '../dimensions/Dimensions'
-import Service from '../service/Service'
 import Feedback from '../feedback/Feedback'
-import News from '../lisa-platform/news/News'
 import Partner from '../partner/Partner'
-import LisaFooter from '../lisa-platform/footer/LisaFooter'
+import HomeUpdates from '../updates/HomeUpdates'
+import PublicFooter from '../footer/PublicFooter'
 import Insight from '../insight/Insight'
 import Header from './Header'
-import ClimateChange from '../lisa-platform/climate/ClimateChange'
 
 
 const Home = () => {
 
-    // Load the ClimateChange component when the Home component is mounted
-    useEffect(() => {
-        // import('../lisa-platform/climate/ClimateChange')
-        <ClimateChange />
-    }, [])
-
-
     return (
-        <div>
+        <div id="top">
             <NavBar />
             <Header />
-            {/* <Feature /> */}
             <Platform />
-            <Dimensions />
-            <Insight />
-            <Service />
+            <div id="development"><Dimensions /></div>
+            <div id="insights"><Insight /></div>
             <Feedback />
-            <News />
+            <HomeUpdates />
             <Partner />
-            <LisaFooter />
+            <PublicFooter />
             {/* <About /> */}
             {/* <Services /> */}
             {/* <WhyChooseUs />

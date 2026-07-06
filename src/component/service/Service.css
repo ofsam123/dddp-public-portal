@@ -1,10 +1,94 @@
-.card-style {
-    border: 1px solid #e6eefb !important;
+.audiences-section {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 112px 0;
 }
 
-.card-style:hover {
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
-    transform: scale(1.05);
-    transition: all 0.3s ease;
-    border: 1px solid #0B6000 !important;
+.audiences-section__heading {
+    max-width: 780px;
+    margin-bottom: 44px;
+    text-align: left;
+}
+
+.audiences-section h2 {
+    margin: 0;
+    color: #153e5c;
+    font-size: clamp(2.25rem, 4.1vw, 3.65rem);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+}
+
+.audiences-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.audience-card {
+    min-height: 160px;
+    padding: 26px;
+    display: flex;
+    align-items: flex-start;
+    gap: 21px;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #deebf1;
+    border-radius: 15px;
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.audience-card:hover {
+    border-color: #9fd7eb;
+    box-shadow: 0 18px 38px rgba(18, 88, 125, 0.1);
+    transform: translateY(-3px);
+}
+
+.audience-card__icon {
+    width: 55px;
+    height: 55px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: #eaf7fc;
+    border-radius: 12px;
+}
+
+.audience-card__icon svg {
+    width: 27px;
+    height: 27px;
+    fill: none;
+    stroke: #1675aa;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.audience-card h3 {
+    margin: 3px 0 8px;
+    color: #153e5c;
+    font-size: 1.08rem;
+}
+
+.audience-card p {
+    margin: 0;
+    color: #728898;
+    font-size: 0.94rem;
+    line-height: 1.65;
+}
+
+@media (max-width: 720px) {
+    .audiences-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 580px) {
+    .audiences-section {
+        width: calc(100% - 30px);
+        padding: 78px 0;
+    }
+
+    .audience-card {
+        padding: 21px;
+    }
 }

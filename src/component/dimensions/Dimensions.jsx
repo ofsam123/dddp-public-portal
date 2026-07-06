@@ -1,52 +1,48 @@
 import React from 'react'
-import economicImage from '../static/images/img/economic.png'
-import socialImage from '../static/images/img/social.png'
-import infrastructureImage from '../static/images/img/infrastructure.png'
-import governanceImage from '../static/images/img/governance.png'
-import emergencyImage from '../static/images/img/emergency.png'
-import monitoringImage from '../static/images/img/monitoring.png'
+import {
+    EconomicIcon,
+    CommunityIcon,
+    InfrastructureIcon,
+    GovernanceIcon,
+    EmergencyIcon,
+    MonitoringIcon,
+} from '../shared/PortalIcons'
 import './Dimensions.css'
 
-const cardData = [
-    { title: 'Econimic Development', imgSrc: economicImage },
-    { title: 'Social Development', imgSrc: socialImage, },
-    { title: 'Environmental, Infrstructure & Human Settlement', imgSrc: infrastructureImage, },
-    { title: 'Governance, Corruption & Public Administration', imgSrc: governanceImage },
-    { title: 'Emergency Planning & Preparedness', imgSrc: emergencyImage, },
-    { title: 'Implementation, Coordination, Monitoring & Evaluation', imgSrc: monitoringImage },
-];
+const dimensions = [
+    { number: '01', title: 'Economic development', description: 'Track local growth, employment, enterprise and economic opportunity.', icon: <EconomicIcon /> },
+    { number: '02', title: 'Social development', description: 'Understand progress in health, education, inclusion and social services.', icon: <CommunityIcon /> },
+    { number: '03', title: 'Environment & infrastructure', description: 'Explore infrastructure, human settlements and environmental resilience.', icon: <InfrastructureIcon /> },
+    { number: '04', title: 'Governance & administration', description: 'Support transparent institutions, public administration and accountability.', icon: <GovernanceIcon /> },
+    { number: '05', title: 'Emergency preparedness', description: 'Strengthen local readiness, risk planning and coordinated response.', icon: <EmergencyIcon /> },
+    { number: '06', title: 'Monitoring & evaluation', description: 'Follow implementation, coordination and development outcomes over time.', icon: <MonitoringIcon /> },
+]
 
-const Dimensions = () => {
-    return (
-        <div style={{ width: '80%', margin: '0 auto', marginTop: '5rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', color: '#0B6000' }}>
-                <p style={{ padding: '5px 15px', fontWeight: '500', background: 'linear-gradient(to left, #fff 2.23%, #eff1fd 97.21%)' }}>DIMENSIONS</p>
-                <h1>Development Dimensions</h1>
-                <p style={{fontSize: '1.3rem'}}>
-                    Bleeding about only a quid blower I don't want no agro bleeding chimney pot burke
-                    tosser cras nice one boot fanny.!
-                </p>
+const Dimensions = () => (
+    <section className="dimensions-section" aria-labelledby="dimensions-title">
+        <div className="dimensions-section__heading">
+            <div>
+                <span className="section-kicker">Development framework</span>
+                <h2 id="dimensions-title">One view across every development dimension.</h2>
             </div>
-
-            <div className="container" style={{ marginTop: '3rem', width: '100%' }}>
-                <div className="row">
-                    {cardData.map((card, index) => (
-                        <div className="col-md-4" key={index} style={{ marginBottom: '2rem' }}>
-                            <div className="card dimension-card" style={{
-                                display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1rem 0 0 2rem', width: '330px', height: '150px',
-                                boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px', border: '1px solid white'
-                            }}>
-                                <h5 className="card-title dimension-card-title" style={{ marginBottom: '1.5rem' }}>{card.title}</h5>
-                                <img src={card.imgSrc} alt={card.title} className="card-img-top"
-                                    style={{ width: '12%', height: 'auto' }} />
-                            </div>
-                        </div>
-
-                    ))}
-                </div>
-            </div>
+            <p>
+                DDDP brings district information together so progress can be understood across the areas that shape everyday life.
+            </p>
         </div>
-    )
-}
+
+        <div className="dimensions-grid">
+            {dimensions.map((dimension) => (
+                <article className="dimension-card" key={dimension.title}>
+                    <div className="dimension-card__topline">
+                        <span>{dimension.number}</span>
+                        <span className="dimension-card__icon">{dimension.icon}</span>
+                    </div>
+                    <h3>{dimension.title}</h3>
+                    <p>{dimension.description}</p>
+                </article>
+            ))}
+        </div>
+    </section>
+)
 
 export default Dimensions
