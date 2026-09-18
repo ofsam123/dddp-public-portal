@@ -1,78 +1,101 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { Link } from 'react-router-dom'
+import PublicYearSelector from '../explore/components/PublicYearSelector'
+import { AnimatedNumber, PublicMotionItem, PublicMotionSection } from '../shared/PublicMotion'
 import './Platform.css'
 
-const ReportIcon = () => (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7 3.5h8l3 3V20H7z" />
-        <path d="M15 3.5V7h3M10 11h5M10 14h5M10 17h3" />
-    </svg>
-)
+const formatRetrievedAt = (value) => {
+    if (!value) return null
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return null
+    return new Intl.DateTimeFormat('en-GH', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
+}
 
-const DataIcon = () => (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-        <ellipse cx="12" cy="6" rx="7" ry="3" />
-        <path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />
-    </svg>
-)
+const Platform = ({
+    geographyData,
+    isGeographyLoading,
+    isLoading,
+    publicYear,
+    summaryData,
+}) => {
+    const [isInView, setIsInView] = useState(false)
+    const handleSectionEnter = useCallback(() => setIsInView(true), [])
+    const retrievedAt = formatRetrievedAt(summaryData?.meta.retrievedAt)
+    const valueClassName = (value, className = '') => (
+        `${className}${Number.isInteger(value) ? '' : ' is-unavailable'}`
+    )
+    const projects = summaryData?.kpis.projects
+    const programmes = summaryData?.kpis.programmes
+    const projectsProgrammesTotal = summaryData?.kpis.projectsProgrammesTotal
+    const meetings = summaryData?.kpis.meetings
+    const regions = geographyData.meta.regionCount
+    const districts = geographyData.meta.districtCount
 
-const ClimateIcon = () => (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7.5 18.5h9.2a3.8 3.8 0 0 0 .3-7.6A5.5 5.5 0 0 0 6.7 9.1a4.8 4.8 0 0 0 .8 9.4Z" />
-        <path d="M9 15h6" />
-    </svg>
-)
-
-const platforms = [
-    {
-        title: 'District reporting tool',
-        description: 'Submit, review and manage district development reports in one connected workspace.',
-        href: 'https://dddp.gov.gh/',
-        external: true,
-        label: 'Open reporting tool',
-        icon: <ReportIcon />,
-    },
-    {
-        title: 'Planning and analytics',
-        description: 'Explore district performance, planning information and decision-ready development data.',
-        href: 'https://dpat.aoinnovations.org/',
-        external: true,
-        label: 'Explore DPAT',
-        icon: <DataIcon />,
-    },
-    {
-        title: 'Local climate insights',
-        description: 'Access local forecasts and climate information designed to support resilient communities.',
-        href: '/lisa',
-        external: false,
-        label: 'Explore LISA',
-        icon: <ClimateIcon />,
-    },
-]
-
-const Platform = () => {
     return (
-        <section className="platform-access" id="platforms" aria-labelledby="platform-access-title">
-            <h2 id="platform-access-title" className="visually-hidden">Access DDDP platforms</h2>
-            <div className="platform-access__grid">
-                {platforms.map((platform) => (
-                    <a
-                        className="platform-card"
-                        href={platform.href}
-                        key={platform.title}
-                        target={platform.external ? '_blank' : undefined}
-                        rel={platform.external ? 'noopener noreferrer' : undefined}
-                    >
-                        <div className="platform-card__topline">
-                            <span className="platform-card__icon">{platform.icon}</span>
-                            <span className="platform-card__arrow" aria-hidden="true">↗</span>
+        <PublicMotionSection onEnter={handleSectionEnter} className="platform-access" id="public-snapshot" aria-labelledby="platform-access-title">
+            <PublicMotionItem className="platform-access__heading-row">
+                <div className="platform-access__heading">
+                    <span className="section-kicker">National snapshot</span>
+                    <h2 id="platform-access-title">Ghana at a glance</h2>
+                    <p>Current DDDP project, programme and meeting counts for Ghana.</p>
+                </div>
+                <div className="platform-access__context" aria-label="National indicator context">
+                    <PublicYearSelector
+                        year={publicYear.year}
+                        years={publicYear.years}
+                        isLoading={publicYear.isLoading}
+                        onChange={publicYear.setYear}
+                    />
+                    <span>{summaryData ? 'Source: DDDP' : isLoading ? 'Loading live data' : 'Live data unavailable'}</span>
+                    {retrievedAt && <span>Retrieved {retrievedAt}</span>}
+                </div>
+            </PublicMotionItem>
+
+            <PublicMotionItem className="platform-snapshot" aria-label="National public indicator snapshot">
+                <article className="platform-snapshot__activity">
+                    <span className="platform-snapshot__label">Development activity</span>
+                    <AnimatedNumber
+                        as="div"
+                        active={isInView}
+                        value={projectsProgrammesTotal}
+                        className={valueClassName(projectsProgrammesTotal, 'platform-snapshot__primary-value')}
+                    />
+                    <h3>Projects &amp; programmes</h3>
+                    <div className="platform-snapshot__activity-detail" aria-label="Projects and programmes breakdown">
+                        <div>
+                            <AnimatedNumber active={isInView} value={projects} className={valueClassName(projects)} />
+                            <span>Projects</span>
                         </div>
-                        <h3>{platform.title}</h3>
-                        <p>{platform.description}</p>
-                        <span className="platform-card__link">{platform.label} <i aria-hidden="true">→</i></span>
-                    </a>
-                ))}
-            </div>
-        </section>
+                        <div>
+                            <AnimatedNumber active={isInView} value={programmes} className={valueClassName(programmes)} />
+                            <span>Programmes</span>
+                        </div>
+                    </div>
+                </article>
+
+                <div className="platform-snapshot__secondary">
+                    <article className="platform-snapshot__meetings">
+                        <span className="platform-snapshot__label">Governance activity</span>
+                        <AnimatedNumber active={isInView} value={meetings} className={valueClassName(meetings)} />
+                        <h3>Meetings</h3>
+                    </article>
+
+                    <div className="platform-snapshot__coverage" aria-label="Public geography coverage">
+                        <span className="platform-snapshot__label">Geographic coverage</span>
+                        <div>
+                            <p><AnimatedNumber active={isInView} value={regions} className={valueClassName(regions)} /> Regions</p>
+                            <p><AnimatedNumber active={isInView} value={districts} className={valueClassName(districts)} /> Districts / MMDAs</p>
+                        </div>
+                        {!geographyData.meta.connected && !isGeographyLoading && <small>Coverage unavailable</small>}
+                    </div>
+                </div>
+            </PublicMotionItem>
+
+            <PublicMotionItem className="platform-access__footer">
+                <p>National activity and public geography coverage in one view.</p>
+                <Link to={publicYear.withYear('/explore/ghana')}>Explore national data <span aria-hidden="true">-&gt;</span></Link>
+            </PublicMotionItem>
+        </PublicMotionSection>
     )
 }
 

@@ -1,39 +1,35 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import DDDPlogo from '../static/images/img/dddp-clean-logo.png'
 import { ExternalArrowIcon } from '../shared/PortalIcons'
+import PortalLogo from '../shared/PortalLogo'
 import './PublicFooter.css'
 
-const PublicFooter = () => (
+const PublicFooter = ({ withYear = (path) => path }) => (
     <footer className="public-footer">
-        <div className="public-footer__cta">
-            <div><span>Ready to work with district data?</span><h2>Turn information into better local decisions.</h2></div>
-            <a href="https://dddp.gov.gh/" target="_blank" rel="noopener noreferrer">
-                Open reporting tool <span className="public-footer__cta-icon"><ExternalArrowIcon /></span>
-            </a>
-        </div>
-
         <div className="public-footer__main">
             <div className="public-footer__brand">
-                <Link className="public-footer__logo" to="/" aria-label="DDDP home">
-                    <img src={DDDPlogo} alt="District Development Data Platform" />
-                </Link>
-                <p>A shared gateway to district development information, planning tools and public reporting across Ghana.</p>
+                <PortalLogo variant="footer" />
+                <p>A public gateway to district development information, LISA climate content, updates and approved resources across Ghana.</p>
             </div>
             <div className="public-footer__column">
-                <h3>Explore</h3>
-                <a href="/#platforms">Platforms</a><a href="/#development">Development areas</a><a href="/#insights">Insights</a><Link to="/lisa">LISA</Link>
+                <h3>Public data</h3>
+                <Link to={withYear('/explore')}>Explore Data</Link>
+                <Link to={withYear('/explore/ghana')}>Ghana overview</Link>
+                <a href="/#reports-resources">Reports &amp; Resources</a>
+                <Link to="/updates">Updates</Link>
             </div>
             <div className="public-footer__column">
-                <h3>Platforms</h3>
-                <a href="https://dddp.gov.gh/" target="_blank" rel="noopener noreferrer">Reporting tool</a>
-                <a href="https://dpat.aoinnovations.org/" target="_blank" rel="noopener noreferrer">DPAT</a>
-                <Link to="/climate">Climate information</Link>
+                <h3>Services</h3>
+                <Link to="/lisa">LISA climate information</Link>
+                <Link to="/all-forcast">Forecast history</Link>
+                <a href="https://dddp.gov.gh/" target="_blank" rel="noopener noreferrer">
+                    Reporting platform <span aria-hidden="true"><ExternalArrowIcon /></span>
+                </a>
             </div>
             <div className="public-footer__column">
-                <h3>Contact</h3>
-                <p>Ministries, Accra<br />Ghana</p>
+                <h3>About</h3>
                 <Link to="/about">About DDDP</Link>
+                <p>Ministries, Accra<br />Ghana</p>
             </div>
         </div>
 

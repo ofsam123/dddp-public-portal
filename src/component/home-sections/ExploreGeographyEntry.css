@@ -1,0 +1,204 @@
+.home-geography {
+    margin: 0 0 22px;
+    padding: 74px 0;
+    background: #eef3f8;
+    border-top: 1px solid var(--color-border, #d9e3ec);
+    border-bottom: 1px solid var(--color-border, #d9e3ec);
+}
+
+.home-geography__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 0.72fr);
+    gap: 76px;
+    align-items: center;
+    width: min(1180px, calc(100% - 48px));
+    margin-inline: auto;
+}
+
+.home-geography__content h2 {
+    max-width: 660px;
+    margin: 9px 0 16px;
+    color: var(--color-primary, #16325A);
+    font-size: 2.65rem;
+    line-height: 1.08;
+    letter-spacing: 0;
+}
+
+.home-geography__content > p {
+    max-width: 610px;
+    margin: 0;
+    color: var(--color-text-muted, #5f6f82);
+    line-height: 1.72;
+}
+
+.home-geography__coverage {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 510px;
+    margin-top: 34px;
+    padding: 22px 0;
+    border-top: 1px solid rgba(22, 50, 90, 0.16);
+    border-bottom: 1px solid rgba(22, 50, 90, 0.16);
+}
+
+.home-geography__coverage > div + div {
+    padding-left: 28px;
+    border-left: 1px solid rgba(22, 50, 90, 0.16);
+}
+
+.home-geography__coverage strong,
+.home-geography__coverage span {
+    display: block;
+}
+
+.home-geography__coverage strong {
+    color: var(--color-primary, #16325A);
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.home-geography__coverage span {
+    margin-top: 7px;
+    color: var(--color-text-muted, #5f6f82);
+    font-size: 0.76rem;
+    font-weight: 750;
+}
+
+.home-geography__path {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 27px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.home-geography__path li {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 7px;
+    color: var(--color-primary, #16325A);
+}
+
+.home-geography__path li + li::before {
+    content: '\2192';
+    position: absolute;
+    right: calc(100% + 10px);
+    color: #a37b16;
+    font-size: 0.72rem;
+}
+
+.home-geography__path span {
+    color: #a37b16;
+    font-size: 0.62rem;
+    font-weight: 850;
+}
+
+.home-geography__path strong {
+    font-size: 0.82rem;
+}
+
+.home-geography__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    margin-top: 32px;
+    padding: 0 19px;
+    border-radius: 5px;
+    color: #fff;
+    background: var(--color-primary, #16325A);
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.home-geography__link:hover,
+.home-geography__link:focus-visible {
+    color: #fff;
+    background: var(--color-primary-hover, #0D1F3A);
+}
+
+.home-geography__link:focus-visible {
+    outline: 3px solid rgba(196, 154, 44, 0.5);
+    outline-offset: 3px;
+}
+
+.home-geography__visual {
+    position: relative;
+    display: grid;
+    min-height: 480px;
+    place-items: center;
+    overflow: hidden;
+}
+
+.home-geography__visual > span,
+.home-geography__visual > small {
+    position: absolute;
+    z-index: 1;
+    color: var(--color-text-muted, #5f6f82);
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.home-geography__visual > span {
+    top: 22px;
+    left: 16px;
+    color: var(--color-primary, #16325A);
+}
+
+.home-geography__visual > small {
+    right: 16px;
+    bottom: 22px;
+}
+
+.home-geography__visual svg {
+    display: block;
+    width: min(100%, 400px);
+    height: auto;
+    max-height: 460px;
+}
+
+@media (max-width: 880px) {
+    .home-geography__inner {
+        grid-template-columns: 1fr;
+        gap: 38px;
+        width: min(100% - 36px, 700px);
+    }
+
+    .home-geography__content h2 {
+        font-size: 2.3rem;
+    }
+
+    .home-geography__visual {
+        min-height: 390px;
+    }
+}
+
+@media (max-width: 560px) {
+    .home-geography {
+        padding: 62px 0;
+    }
+
+    .home-geography__inner {
+        width: calc(100% - 30px);
+    }
+
+    .home-geography__content h2 {
+        font-size: 2rem;
+    }
+
+    .home-geography__coverage {
+        grid-template-columns: 1fr;
+    }
+
+    .home-geography__coverage > div + div {
+        margin-top: 18px;
+        padding-top: 18px;
+        padding-left: 0;
+        border-top: 1px solid rgba(22, 50, 90, 0.16);
+        border-left: 0;
+    }
+}

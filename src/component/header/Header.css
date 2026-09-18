@@ -5,8 +5,8 @@
     overflow: hidden;
     color: #fff;
     background:
-        linear-gradient(115deg, rgba(15, 96, 142, 0.97), rgba(34, 148, 198, 0.92)),
-        #1675aa;
+        linear-gradient(115deg, rgba(22, 50, 90, 0.98), rgba(13, 31, 58, 0.94)),
+        var(--color-primary, #16325A);
     border-radius: 0 0 48px 48px;
 }
 
@@ -41,7 +41,7 @@
     gap: 10px;
     margin-bottom: 24px;
     padding: 8px 13px;
-    color: #dff6ff;
+    color: #e8eef7;
     background: rgba(255, 255, 255, 0.11);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 999px;
@@ -51,12 +51,12 @@
     text-transform: uppercase;
 }
 
-.portal-hero__eyebrow span {
+.portal-hero__badge-dot {
     width: 7px;
     height: 7px;
-    background: #7de3ff;
+    background: #f0c76a;
     border-radius: 50%;
-    box-shadow: 0 0 0 5px rgba(125, 227, 255, 0.13);
+    box-shadow: 0 0 0 5px rgba(240, 199, 106, 0.16);
 }
 
 .portal-hero h1 {
@@ -66,11 +66,11 @@
     font-size: clamp(3rem, 5.2vw, 5rem);
     font-weight: 750;
     line-height: 0.99;
-    letter-spacing: -0.055em;
+    letter-spacing: 0;
 }
 
 .portal-hero h1 em {
-    color: #bcecff;
+    color: #f0c76a;
     font-style: normal;
 }
 
@@ -107,13 +107,13 @@
 }
 
 .portal-button--primary {
-    color: #176b9c;
+    color: var(--color-primary, #16325A);
     background: #fff;
-    box-shadow: 0 14px 30px rgba(8, 60, 90, 0.2);
+    box-shadow: 0 14px 30px rgba(8, 20, 38, 0.22);
 }
 
 .portal-button--primary:hover {
-    color: #0f608e;
+    color: var(--color-primary-hover, #0D1F3A);
     background: #f4fbff;
 }
 
@@ -134,7 +134,7 @@
     display: grid;
     place-items: center;
     margin-right: -8px;
-    color: #0f608e;
+    color: var(--color-primary, #16325A);
     background: #fff;
     border-radius: 50%;
     transition: transform 180ms ease;
@@ -146,265 +146,221 @@
     fill: none;
     stroke: currentColor;
     stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
 }
 
 .portal-button:hover .portal-button__icon {
     transform: translate(2px, -2px);
 }
 
-.portal-hero__trust {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: 38px;
-}
-
-.portal-hero__avatars {
-    display: flex;
-}
-
-.portal-hero__avatars span {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    margin-right: -8px;
-    color: #105d88;
-    background: #dff6ff;
-    border: 2px solid rgba(255, 255, 255, 0.88);
-    border-radius: 50%;
-    font-size: 0.61rem;
-    font-weight: 800;
-}
-
-.portal-hero__trust p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.75rem;
-    line-height: 1.45;
-}
-
-.portal-hero__trust strong {
-    color: #fff;
-    font-size: 0.8rem;
-}
-
 .portal-hero__visual {
     position: relative;
+    min-width: 0;
 }
 
-.data-window {
+.hero-geography {
     position: relative;
-    padding: 24px;
-    color: #163c56;
-    background: rgba(255, 255, 255, 0.97);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 20px;
-    box-shadow: 0 30px 70px rgba(7, 54, 80, 0.28);
-    transform: rotate(1.5deg);
+    padding: 12px 0 10px;
 }
 
-.data-window__topbar,
-.data-window__chart-heading {
+.hero-geography::before {
+    content: '';
+    position: absolute;
+    inset: 48px 0 28px;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(to left, #000 35%, transparent 100%);
+}
+
+.hero-geography__header {
+    position: relative;
+    z-index: 2;
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.data-window__topbar > div,
-.data-window__chart-heading > div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.data-window__label,
-.data-window__chart-heading span,
-.data-window__metrics span {
-    color: #7890a2;
-    font-size: 0.7rem;
-}
-
-.data-window__topbar strong {
-    font-size: 1rem;
-}
-
-.data-window__status {
-    display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 7px 10px;
-    color: #26714f;
-    background: #eaf8f1;
-    border-radius: 999px;
-    font-size: 0.66rem;
+    justify-content: space-between;
+    gap: 18px;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+}
+
+.hero-geography__header {
+    padding: 0 4px 10px;
+}
+
+.hero-geography__header span {
+    color: rgba(255, 255, 255, 0.58);
     font-weight: 700;
 }
 
-.data-window__status i {
-    width: 6px;
-    height: 6px;
-    background: #3eb879;
-    border-radius: 50%;
+.hero-geography__header strong {
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 700;
 }
 
-.data-window__metrics {
+.hero-geography__body {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 22px 0;
-}
-
-.data-window__metrics > div {
-    display: flex;
-    flex-direction: column;
-    padding: 14px;
-    background: #f3f8fb;
-    border: 1px solid #e5eff4;
-    border-radius: 12px;
-}
-
-.data-window__metrics strong {
-    margin: 5px 0 2px;
-    color: #125f8d;
-    font-size: 1.45rem;
-}
-
-.data-window__metrics small {
-    color: #8ca0ae;
-    font-size: 0.62rem;
-}
-
-.data-window__chart {
-    padding: 17px;
-    border: 1px solid #e4eef3;
-    border-radius: 14px;
-}
-
-.data-window__chart-heading strong {
-    color: #1b435d;
-    font-size: 0.83rem;
-}
-
-.data-window__chart-heading > span {
-    padding-top: 4px;
-}
-
-.data-window__bars {
-    height: 128px;
-    margin-top: 18px;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    align-items: end;
-    gap: 13px;
-    background: repeating-linear-gradient(to top, #edf3f6 0, #edf3f6 1px, transparent 1px, transparent 32px);
-}
-
-.data-window__bars div {
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-}
-
-.data-window__bars span {
-    width: 100%;
-    min-height: 16px;
-    background: linear-gradient(to top, #1675aa, #52c1e6);
-    border-radius: 5px 5px 2px 2px;
-}
-
-.data-window__months {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 13px;
-    margin-top: 8px;
-    color: #8aa0af;
-    font-size: 0.58rem;
-    text-align: center;
-}
-
-.data-float {
-    position: absolute;
-    display: flex;
+    grid-template-rows: minmax(0, 1fr) auto;
     align-items: center;
-    gap: 11px;
-    min-width: 184px;
-    padding: 13px 15px;
-    color: #163c56;
-    background: #fff;
-    border: 1px solid #e0eef5;
-    border-radius: 12px;
-    box-shadow: 0 18px 38px rgba(7, 54, 80, 0.2);
+    min-height: 440px;
 }
 
-.data-float--top {
-    top: -34px;
-    right: -28px;
+.hero-geography__map {
+    position: relative;
+    width: min(430px, calc(100% - 20px));
+    min-width: 0;
+    margin: 0 auto;
+    isolation: isolate;
 }
 
-.data-float--bottom {
-    bottom: -32px;
-    left: -36px;
+.hero-geography__map svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 450px;
 }
 
-.data-float > div {
+.hero-geography__callout {
+    position: absolute;
+    z-index: 3;
+    box-sizing: border-box;
+    width: 70px;
+    height: 70px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 2px solid rgba(240, 199, 106, 0.9);
+    border-radius: 50%;
+    background: #f4f7fa;
+    box-shadow: 0 10px 24px rgba(5, 16, 32, 0.24);
+}
+
+.hero-geography__connectors {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.hero-geography__connector {
+    fill: none;
+    stroke: rgba(240, 199, 106, 0.76);
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.hero-geography__origin circle:not(.hero-geography__origin-halo) {
+    fill: var(--color-primary, #16325A);
+    stroke: #f0c76a;
+    stroke-width: 1.4;
+    vector-effect: non-scaling-stroke;
+}
+
+.hero-geography__origin-halo {
+    fill: rgba(240, 199, 106, 0.16);
+}
+
+.hero-geography__callout img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+.hero-geography__callout--projects img {
+    object-position: 50% 42%;
+}
+
+.hero-geography__callout--community img {
+    object-position: 52% 45%;
+}
+
+.hero-geography__callout svg {
+    width: 31px;
+    height: 31px;
+    fill: none;
+    stroke: var(--color-primary, #16325A);
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.hero-geography__callout--projects {
+    top: 24%;
+    left: -4px;
+}
+
+.hero-geography__callout--community {
+    top: 11%;
+    right: 2px;
+}
+
+.hero-geography__callout--infrastructure {
+    right: 4px;
+    bottom: 19%;
+}
+
+.hero-geography__hierarchy {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    margin-top: -2px;
 }
 
-.data-float strong {
+.hero-geography__hierarchy ol {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hero-geography__hierarchy li {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.hero-geography__hierarchy li + li::before {
+    content: '\2192';
+    position: absolute;
+    right: calc(100% + 9px);
+    color: rgba(240, 199, 106, 0.54);
     font-size: 0.72rem;
 }
 
-.data-float small {
-    margin-top: 2px;
-    color: #8aa0af;
-    font-size: 0.61rem;
-}
-
-.data-float__icon {
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    color: #fff;
-    background: #25a9d6;
-    border-radius: 50%;
+.hero-geography__hierarchy span {
+    color: #f0c76a;
+    font-size: 0.58rem;
     font-weight: 800;
 }
 
-.data-float__pulse {
-    width: 31px;
-    height: 31px;
-    background: #d9f4ff;
-    border: 9px solid #f0faff;
-    border-radius: 50%;
-    box-shadow: inset 0 0 0 5px #35b4df;
+.hero-geography__hierarchy strong {
+    color: #ffffff;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0;
 }
 
-.portal-hero__glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(2px);
-}
-
-.portal-hero__glow--one {
-    width: 500px;
-    height: 500px;
-    top: -300px;
-    left: 30%;
-    background: rgba(155, 229, 255, 0.22);
-}
-
-.portal-hero__glow--two {
-    width: 340px;
-    height: 340px;
-    right: -140px;
-    bottom: -190px;
-    background: rgba(181, 237, 255, 0.2);
+.hero-geography__hierarchy small {
+    margin-left: 4px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.58rem;
+    font-weight: 650;
+    text-transform: uppercase;
 }
 
 @media (max-width: 1050px) {
@@ -417,9 +373,6 @@
         gap: 44px;
     }
 
-    .data-float--top {
-        right: -10px;
-    }
 }
 
 @media (max-width: 880px) {
@@ -444,8 +397,7 @@
         margin-right: auto;
     }
 
-    .portal-hero__actions,
-    .portal-hero__trust {
+    .portal-hero__actions {
         justify-content: center;
     }
 
@@ -453,6 +405,7 @@
         width: min(100%, 570px);
         margin: 0 auto;
     }
+
 }
 
 @media (max-width: 560px) {
@@ -480,45 +433,75 @@
         width: 100%;
     }
 
-    .portal-hero__trust {
-        align-items: flex-start;
-        text-align: left;
+    .portal-hero__inner {
+        gap: 58px;
     }
 
-    .data-window {
-        padding: 16px;
-        transform: none;
+    .hero-geography {
+        padding: 0;
     }
 
-    .data-window__metrics {
-        gap: 6px;
+    .hero-geography::before,
+    .hero-geography__callout {
+        display: none;
     }
 
-    .data-window__metrics > div {
-        padding: 10px 8px;
+    .hero-geography__header {
+        align-items: flex-end;
     }
 
-    .data-window__metrics strong {
-        font-size: 1.1rem;
+    .hero-geography__header strong {
+        max-width: 160px;
+        text-align: right;
     }
 
-    .data-window__bars {
-        height: 96px;
-        gap: 8px;
+    .hero-geography__body {
+        grid-template-columns: 1fr;
+        min-height: 0;
     }
 
-    .data-window__months {
-        gap: 8px;
+    .hero-geography__map svg {
+        max-height: 350px;
     }
 
-    .data-float--top {
-        top: -40px;
-        right: 8px;
+    .hero-geography__hierarchy ol {
+        width: 100%;
+        gap: 22px;
+    }
+}
+
+@media (min-width: 881px) {
+    .portal-hero {
+        min-height: 570px;
+        padding: 100px 0 210px;
     }
 
-    .data-float--bottom {
-        left: 8px;
-        bottom: -43px;
+    .portal-hero__inner {
+        gap: 64px;
+    }
+
+    .portal-hero__eyebrow {
+        margin-bottom: 17px;
+    }
+
+    .portal-hero h1 {
+        max-width: 620px;
+        margin-bottom: 18px;
+        font-size: clamp(2.85rem, 4.55vw, 4.35rem);
+        line-height: 0.98;
+    }
+
+    .portal-hero__content > p {
+        margin-bottom: 25px;
+        line-height: 1.62;
+    }
+
+    .hero-geography__body {
+        min-height: 360px;
+    }
+
+    .hero-geography__map svg {
+        max-height: 385px;
     }
 }
 

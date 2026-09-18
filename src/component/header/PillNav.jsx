@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import PortalLogo from '../shared/PortalLogo'
 import './PillNav.css'
 
 const PillNav = ({
     logo,
-    logoAlt = 'Logo',
+    logoAlt = 'District Development Data Platform',
     items = [],
     activeHref = '/',
     className = '',
-    baseColor = '#0f608e',
+    baseColor = '#16325A',
     pillColor = '#ffffff',
     hoveredPillTextColor = '#ffffff',
-    pillTextColor = '#153e5c',
+    pillTextColor = '#16325A',
 }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const containerRef = useRef(null)
@@ -58,8 +59,8 @@ const PillNav = ({
     )
 
     const renderDesktopItem = (item) => {
-        const active = activeHref === item.href
-        const itemClassName = `pill${active ? ' is-active' : ''}${item.external ? ' pill--action' : ''}`
+        const active = activeHref === (item.activeHref || item.href)
+        const itemClassName = `pill${active ? ' is-active' : ''}${item.action ? ' pill--action' : ''}`
 
         if (isNativeLink(item)) {
             return (
@@ -78,7 +79,7 @@ const PillNav = ({
     }
 
     const renderMobileItem = (item) => {
-        const itemClassName = `mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`
+        const itemClassName = `mobile-menu-link${activeHref === (item.activeHref || item.href) ? ' is-active' : ''}${item.action ? ' mobile-menu-link--action' : ''}`
 
         if (isNativeLink(item)) {
             return (
@@ -100,9 +101,7 @@ const PillNav = ({
     return (
         <div className="pill-nav-container" ref={containerRef} style={cssVars}>
             <nav className={`pill-nav ${className}`} aria-label="Primary navigation">
-                <Link className="pill-logo" to="/" aria-label="DDDP home" onClick={closeMobileMenu}>
-                    <img src={logo} alt={logoAlt} />
-                </Link>
+                <PortalLogo src={logo} alt={logoAlt} variant="nav" onClick={closeMobileMenu} />
 
                 <div className="pill-nav-items desktop-only">
                     <ul className="pill-list">

@@ -1,48 +1,46 @@
 import React from 'react'
 import {
     EconomicIcon,
-    CommunityIcon,
     InfrastructureIcon,
-    GovernanceIcon,
     EmergencyIcon,
     MonitoringIcon,
 } from '../shared/PortalIcons'
+import { PublicMotionItem, PublicMotionSection } from '../shared/PublicMotion'
 import './Dimensions.css'
 
 const dimensions = [
-    { number: '01', title: 'Economic development', description: 'Track local growth, employment, enterprise and economic opportunity.', icon: <EconomicIcon /> },
-    { number: '02', title: 'Social development', description: 'Understand progress in health, education, inclusion and social services.', icon: <CommunityIcon /> },
-    { number: '03', title: 'Environment & infrastructure', description: 'Explore infrastructure, human settlements and environmental resilience.', icon: <InfrastructureIcon /> },
-    { number: '04', title: 'Governance & administration', description: 'Support transparent institutions, public administration and accountability.', icon: <GovernanceIcon /> },
-    { number: '05', title: 'Emergency preparedness', description: 'Strengthen local readiness, risk planning and coordinated response.', icon: <EmergencyIcon /> },
-    { number: '06', title: 'Monitoring & evaluation', description: 'Follow implementation, coordination and development outcomes over time.', icon: <MonitoringIcon /> },
+    { number: '01', title: 'Development & planning', description: 'Approved planning summaries and development priorities.', icon: <MonitoringIcon /> },
+    { number: '02', title: 'Projects & programmes', description: 'High-level public summaries of local projects and programmes.', icon: <EconomicIcon /> },
+    { number: '03', title: 'Infrastructure & services', description: 'Public information about facilities, services and local infrastructure where approved.', icon: <InfrastructureIcon /> },
+    { number: '04', title: 'Climate & environment', description: 'LISA forecasts, climate products and public climate resources.', icon: <EmergencyIcon /> },
 ]
 
 const Dimensions = () => (
-    <section className="dimensions-section" aria-labelledby="dimensions-title">
-        <div className="dimensions-section__heading">
+    <PublicMotionSection className="dimensions-section" id="explore-themes" aria-labelledby="dimensions-title">
+        <PublicMotionItem className="dimensions-section__heading">
             <div>
-                <span className="section-kicker">Development framework</span>
-                <h2 id="dimensions-title">One view across every development dimension.</h2>
+                <span className="section-kicker">Explore by theme</span>
+                <h2 id="dimensions-title">Explore by subject, not only by place.</h2>
             </div>
-            <p>
-                DDDP brings district information together so progress can be understood across the areas that shape everyday life.
-            </p>
-        </div>
+            <p>Browse public topics that can grow as approved information is published.</p>
+        </PublicMotionItem>
 
-        <div className="dimensions-grid">
+        <PublicMotionItem className="dimensions-index">
             {dimensions.map((dimension) => (
-                <article className="dimension-card" key={dimension.title}>
-                    <div className="dimension-card__topline">
-                        <span>{dimension.number}</span>
-                        <span className="dimension-card__icon">{dimension.icon}</span>
+                <article className="dimension-row" key={dimension.title}>
+                    <span className="dimension-row__number">{dimension.number}</span>
+                    <div className="dimension-row__content">
+                        <span className="dimension-row__icon">{dimension.icon}</span>
+                        <div>
+                            <h3>{dimension.title}</h3>
+                            <p>{dimension.description}</p>
+                        </div>
                     </div>
-                    <h3>{dimension.title}</h3>
-                    <p>{dimension.description}</p>
+                    <span className="dimension-row__arrow" aria-hidden="true">-&gt;</span>
                 </article>
             ))}
-        </div>
-    </section>
+        </PublicMotionItem>
+    </PublicMotionSection>
 )
 
 export default Dimensions

@@ -1,0 +1,12 @@
+{
+  "title": "Ghana 2021 PHC regional boundaries",
+  "publisher": "Ghana Statistical Service",
+  "sourcePage": "https://statsbank.statsghana.gov.gh/index.html",
+  "sourceArchive": "https://statsbank.statsghana.gov.gh/assets/geofiles.zip",
+  "sourceMember": "Geo FIles/StatsBank_TopoJson.zip/District_272.json",
+  "retrieved": "2026-08-12",
+  "output": "ghana-regions.topo.json",
+  "derivation": "The official district geometries were grouped by their Region property and dissolved with topojson-client mergeArcs. Unused district-level arcs were removed. Shared arcs were simplified with a 25-unit tolerance (approximately 15 metres at the stored transform), preserving arc endpoints and topology. The source label 'Greate Accra' on AMA-Ablekuma South was normalized to 'Greater Accra', matching the other Greater Accra features.",
+  "featureMapping": "Each output feature retains its official region name in properties.name. The application normalizes that name and matches it to the existing geography.js region name and frontend slug. No external or DHIS2 identifiers were added.",
+  "featureCount": 16
+}

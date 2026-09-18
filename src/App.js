@@ -1,31 +1,38 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Home from './component/header/Home';
-import LisaHome from './component/lisa-platform/home/LisaHome';
-import About from './component/about/About';
-import AnalyticsSuccess from './component/blog/AnalyticsSuccess';
-// import ClimateChange from './component/lisa-platform/climate/ClimateChange';
-import TodayForecast from './component/lisa-platform/forcast/all-forcast/TodayForecast';
-import AllForecast from './component/lisa-platform/forcast/all-forcast/AllForecast';
-import Overview from './component/lisa-platform/overview/Overview';
-import OverviewLocal from './component/lisa-platform/overview/OverviewLocal';
-import CapacityBuilding from './component/lisa-platform/news/CapacityBuilding';
-import Training from './component/lisa-platform/news/Training';
-import DistrictDevelopment from './component/lisa-platform/news/DistrictDevelopment';
-import Vulnerability from './component/lisa-platform/news/Vulnerability';
-import CroudFunding from './component/lisa-platform/news/CroudFunding';
-import GmetProducts from './component/lisa-platform/information/GmetProducts';
-import Agrometeorological from './component/lisa-platform/information/Agrometeorological';
-import Climate from './component/lisa-platform/information/Climate';
-import DailyForeCast from './component/lisa-platform/information/DailyForeCast';
-import Drought from './component/lisa-platform/information/Drought';
-import Marine from './component/lisa-platform/information/Marine';
-import Seasonal from './component/lisa-platform/information/Seasonal';
-import Dashboard from './component/lisa-platform/dashbaord/Dashboard';
-import ProductDetails from './component/lisa-platform/information/ProductDetails';
 
-const ClimateChange = lazy(() => import('./component/lisa-platform/climate/ClimateChange'));
+const lazyRoute = (importer, exportName = 'default') => lazy(() => (
+  importer().then((module) => ({ default: module[exportName] }))
+));
+
+const ExploreLanding = lazyRoute(() => import('./component/explore/ExplorePages'), 'ExploreLanding');
+const GhanaOverview = lazyRoute(() => import('./component/explore/ExplorePages'), 'GhanaOverview');
+const RegionPage = lazyRoute(() => import('./component/explore/ExplorePages'), 'RegionPage');
+const DistrictPage = lazyRoute(() => import('./component/explore/ExplorePages'), 'DistrictPage');
+const LisaHome = lazyRoute(() => import('./component/lisa-platform/home/LisaHome'));
+const About = lazyRoute(() => import('./component/about/About'));
+const AnalyticsSuccess = lazyRoute(() => import('./component/blog/AnalyticsSuccess'));
+const TodayForecast = lazyRoute(() => import('./component/lisa-platform/forcast/all-forcast/TodayForecast'));
+const AllForecast = lazyRoute(() => import('./component/lisa-platform/forcast/all-forcast/AllForecast'));
+const Overview = lazyRoute(() => import('./component/lisa-platform/overview/Overview'));
+const OverviewLocal = lazyRoute(() => import('./component/lisa-platform/overview/OverviewLocal'));
+const CapacityBuilding = lazyRoute(() => import('./component/lisa-platform/news/CapacityBuilding'));
+const Training = lazyRoute(() => import('./component/lisa-platform/news/Training'));
+const DistrictDevelopment = lazyRoute(() => import('./component/lisa-platform/news/DistrictDevelopment'));
+const Vulnerability = lazyRoute(() => import('./component/lisa-platform/news/Vulnerability'));
+const CroudFunding = lazyRoute(() => import('./component/lisa-platform/news/CroudFunding'));
+const News = lazyRoute(() => import('./component/lisa-platform/news/News'));
+const Agrometeorological = lazyRoute(() => import('./component/lisa-platform/information/Agrometeorological'));
+const Climate = lazyRoute(() => import('./component/lisa-platform/information/Climate'));
+const DailyForeCast = lazyRoute(() => import('./component/lisa-platform/information/DailyForeCast'));
+const ProductDetails = lazyRoute(() => import('./component/lisa-platform/information/ProductDetails'));
+const Drought = lazyRoute(() => import('./component/lisa-platform/information/Drought'));
+const Marine = lazyRoute(() => import('./component/lisa-platform/information/Marine'));
+const Seasonal = lazyRoute(() => import('./component/lisa-platform/information/Seasonal'));
+const Dashboard = lazyRoute(() => import('./component/lisa-platform/dashbaord/Dashboard'));
+const ClimateChange = lazyRoute(() => import('./component/lisa-platform/climate/ClimateChange'));
 
 function App() {
   return (
@@ -34,6 +41,10 @@ function App() {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/explore" element={<ExploreLanding />} />
+            <Route path="/explore/ghana" element={<GhanaOverview />} />
+            <Route path="/explore/regions/:regionSlug" element={<RegionPage />} />
+            <Route path="/explore/regions/:regionSlug/districts/:districtSlug" element={<DistrictPage />} />
             {/* <Route path="/" element={<Navigate to="/lisa" replace />} /> */}
             <Route path="/lisa" element={<LisaHome />} />
             <Route path='/about' element={<About />} />
@@ -43,6 +54,7 @@ function App() {
             <Route path='/all-forcast' element={<AllForecast />} />
             <Route path='/lisa-overview' element={<Overview />} />
             <Route path='/local-overview' element={<OverviewLocal />} />
+            <Route path='/updates' element={<News />} />
             <Route path='/capacity-building' element={<CapacityBuilding />} />
             <Route path='/training' element={<Training />} />
             <Route path='/district-development' element={<DistrictDevelopment />} />

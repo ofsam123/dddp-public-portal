@@ -1,0 +1,288 @@
+.forecast-history-page {
+    min-height: 100vh;
+    color: #19384d;
+    background:
+        radial-gradient(circle at 14% 8%, rgba(126, 220, 255, 0.2), transparent 30rem),
+        radial-gradient(circle at 92% 22%, rgba(15, 96, 142, 0.12), transparent 28rem),
+        linear-gradient(180deg, #f3f9fc 0%, #ffffff 40rem);
+}
+
+.forecast-history-hero {
+    padding: 112px max(24px, calc((100% - 1180px) / 2)) 54px;
+    text-align: left;
+}
+
+.forecast-history-hero > div {
+    max-width: 910px;
+}
+
+.forecast-history-hero h1 {
+    margin: 16px 0 22px;
+    color: #082f46;
+    font-size: clamp(2.7rem, 5.8vw, 5.8rem);
+    line-height: 0.96;
+    letter-spacing: -0.065em;
+}
+
+.forecast-history-hero p {
+    max-width: 780px;
+    margin: 0;
+    color: #5e7382;
+    font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+    line-height: 1.75;
+}
+
+.forecast-history-section,
+.forecast-history-table-section {
+    padding: 0 max(24px, calc((100% - 1180px) / 2)) 92px;
+}
+
+.forecast-filter {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(15, 96, 142, 0.12);
+    border-radius: 28px;
+    box-shadow: 0 20px 48px rgba(10, 58, 84, 0.1);
+}
+
+.forecast-filter__eyebrow {
+    display: inline-flex;
+    margin-bottom: 7px;
+    color: #0f608e;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.forecast-filter h2 {
+    margin: 0;
+    color: #082f46;
+    font-size: clamp(1.35rem, 2vw, 1.85rem);
+    letter-spacing: -0.04em;
+}
+
+.forecast-filter__controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.forecast-filter__select,
+.forecast-filter__date {
+    min-width: 210px;
+}
+
+.forecast-filter .ant-btn-primary {
+    min-height: 40px;
+    border-color: #0f608e;
+    background: #0f608e;
+    box-shadow: none;
+}
+
+.forecast-history-section__heading {
+    margin: 40px 0 18px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    text-align: left;
+}
+
+.forecast-history-section__heading h2 {
+    margin: 0;
+    color: #082f46;
+    font-size: clamp(1.7rem, 3vw, 2.7rem);
+    letter-spacing: -0.05em;
+}
+
+.forecast-history-section__heading p,
+.forecast-history-table-card__heading p {
+    margin: 0;
+    color: #6b7e8d;
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+.forecast-history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+    gap: 18px;
+}
+
+.forecast-history-card {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    color: #d8f5ff;
+    background: linear-gradient(160deg, #082f46, #0f608e);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 28px;
+    box-shadow: 0 24px 54px rgba(10, 58, 84, 0.16);
+}
+
+.forecast-history-card__top {
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.76);
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.forecast-history-card__body {
+    padding: 24px;
+    flex: 1;
+    text-align: left;
+}
+
+.forecast-history-card__city {
+    display: block;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.forecast-history-card__temp {
+    margin-top: 8px;
+    color: #fff;
+    font-size: clamp(2.3rem, 5vw, 3.7rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.06em;
+}
+
+.forecast-history-card__temp sup {
+    font-size: 0.35em;
+}
+
+.forecast-history-card__weather-icon {
+    width: 82px;
+    height: 82px;
+    margin: 20px 0;
+    object-fit: contain;
+}
+
+.forecast-history-card__metrics {
+    display: grid;
+    gap: 9px;
+}
+
+.forecast-history-card__metric {
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+}
+
+.forecast-history-card__metric img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.forecast-history-card__metric span {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.82rem;
+}
+
+.forecast-history-card__metric strong {
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.forecast-history-card__share {
+    padding: 0 24px 22px;
+    display: flex;
+    gap: 7px;
+}
+
+.forecast-history-table-card {
+    margin-top: 26px;
+    padding: 26px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(15, 96, 142, 0.12);
+    border-radius: 28px;
+    box-shadow: 0 20px 48px rgba(10, 58, 84, 0.1);
+}
+
+.forecast-history-table-card__heading {
+    margin-bottom: 22px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    text-align: left;
+}
+
+.forecast-history-table-card__heading h2 {
+    margin: 0;
+    color: #082f46;
+    font-size: clamp(1.65rem, 2.8vw, 2.5rem);
+    letter-spacing: -0.045em;
+}
+
+.forecast-history-table-card .ant-table-wrapper {
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+.forecast-history-table-card .ant-table-thead > tr > th {
+    color: #082f46;
+    background: #edf8fc;
+    font-weight: 850;
+}
+
+@media (max-width: 900px) {
+    .forecast-filter,
+    .forecast-history-section__heading,
+    .forecast-history-table-card__heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .forecast-filter__controls {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .forecast-history-hero,
+    .forecast-history-section,
+    .forecast-history-table-section {
+        padding-inline: 16px;
+    }
+
+    .forecast-history-hero {
+        padding-top: 82px;
+    }
+
+    .forecast-filter,
+    .forecast-history-table-card {
+        padding: 20px;
+        border-radius: 22px;
+    }
+
+    .forecast-filter__select,
+    .forecast-filter__date,
+    .forecast-filter .ant-btn {
+        width: 100%;
+    }
+}

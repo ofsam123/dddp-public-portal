@@ -1,98 +1,92 @@
 import React, { useState } from 'react'
-import agricultureData from '../static/images/img/agriculture-data.png'
-import educationData from '../static/images/img/education-data.png'
-import healthData from '../static/images/img/health-data.png'
-import commerceData from '../static/images/img/technology-data.png'
-import infrastructureData from '../static/images/img/inftrastructure-data.png'
+import { Link } from 'react-router-dom'
+import ghanaDataImage from '../static/images/img/district-development.jpg'
+import regionDataImage from '../static/images/img/local.png'
+import districtDataImage from '../static/images/img/lisa-local.jpg'
 import { ExternalArrowIcon } from '../shared/PortalIcons'
+import { PublicMotionItem, PublicMotionSection } from '../shared/PublicMotion'
 import './Insight.css'
 
-const insights = [
+const places = [
     {
-        label: 'Agriculture',
-        title: 'See the local agriculture ecosystem more clearly.',
-        description: 'Bring together information on farmers, value-chain actors, production, markets and local agricultural services.',
-        topics: ['Value chains', 'Production', 'Market access'],
-        image: agricultureData,
+        label: 'Ghana',
+        title: 'Start with the national public picture.',
+        description: 'Begin with the national view before moving into regional and local context.',
+        topics: ['National context', 'Approved summaries', 'Public resources'],
+        image: ghanaDataImage,
+        href: '/explore/ghana',
+        linkLabel: 'Open Ghana overview',
     },
     {
-        label: 'Education',
-        title: 'Turn education information into local action.',
-        description: 'Understand access to education, facilities and service delivery to support better district-level planning.',
-        topics: ['Facilities', 'Access', 'Service delivery'],
-        image: educationData,
+        label: 'Regions',
+        title: 'Move from Ghana into regional context.',
+        description: 'Choose a region to understand public information in a clearer place context.',
+        topics: ['Regional view', 'Comparisons', 'Related districts'],
+        image: regionDataImage,
+        href: '/explore',
+        linkLabel: 'Browse regions',
     },
     {
-        label: 'Health',
-        title: 'Build a stronger picture of community health.',
-        description: 'Explore health facilities, coverage and access information across public and private service providers.',
-        topics: ['Coverage', 'Facilities', 'Community access'],
-        image: healthData,
-    },
-    {
-        label: 'Commerce',
-        title: 'Understand enterprise and technology activity.',
-        description: 'Connect local commerce, digital services and entrepreneurship information for evidence-led economic planning.',
-        topics: ['Enterprise', 'Digital services', 'Innovation'],
-        image: commerceData,
-    },
-    {
-        label: 'Infrastructure',
-        title: 'Plan infrastructure around real local needs.',
-        description: 'Bring infrastructure, connectivity and environmental information into a shared district view.',
-        topics: ['Connectivity', 'Settlements', 'Environment'],
-        image: infrastructureData,
+        label: 'Districts',
+        title: 'Make district information easier to understand.',
+        description: 'Open district/MMDA pages for local public information as it becomes available.',
+        topics: ['District profile', 'Local resources', 'Updates'],
+        image: districtDataImage,
+        href: '/explore/ghana',
+        linkLabel: 'Start from Ghana',
     },
 ]
 
 const Insight = () => {
     const [activeIndex, setActiveIndex] = useState(0)
-    const activeInsight = insights[activeIndex]
+    const activePlace = places[activeIndex]
 
     return (
-        <section className="insights-section" aria-labelledby="insights-title">
-            <div className="insights-section__heading">
-                <span className="section-kicker">Explore the data</span>
-                <h2 id="insights-title">From information to insight.</h2>
-                <p>Move between key sectors to see how connected district data can support planning and decision-making.</p>
-            </div>
+        <PublicMotionSection className="insights-section" id="explore-place" aria-labelledby="insights-title">
+            <PublicMotionItem className="insights-section__heading">
+                <span className="section-kicker">Explore by place</span>
+                <h2 id="insights-title">A public geography model for Ghana, regions and districts.</h2>
+                <p>
+                    Find information by where it belongs, from the national picture to regional and district pages.
+                </p>
+            </PublicMotionItem>
 
-            <div className="insight-tabs" role="tablist" aria-label="Data sectors">
-                {insights.map((insight, index) => (
+            <PublicMotionItem className="insight-tabs" role="tablist" aria-label="Geographic levels">
+                {places.map((place, index) => (
                     <button
                         type="button"
                         role="tab"
                         aria-selected={activeIndex === index}
                         className={activeIndex === index ? 'is-active' : ''}
                         onClick={() => setActiveIndex(index)}
-                        key={insight.label}
+                        key={place.label}
                     >
-                        <span>{String(index + 1).padStart(2, '0')}</span>{insight.label}
+                        <span>{String(index + 1).padStart(2, '0')}</span>{place.label}
                     </button>
                 ))}
-            </div>
+            </PublicMotionItem>
 
-            <div className="insight-panel" role="tabpanel">
+            <PublicMotionItem className="insight-panel" role="tabpanel">
                 <div className="insight-panel__content">
-                    <span className="insight-panel__index">Sector {String(activeIndex + 1).padStart(2, '0')}</span>
-                    <h3>{activeInsight.title}</h3>
-                    <p>{activeInsight.description}</p>
+                    <span className="insight-panel__index">Geography {String(activeIndex + 1).padStart(2, '0')}</span>
+                    <h3>{activePlace.title}</h3>
+                    <p>{activePlace.description}</p>
                     <div className="insight-panel__topics">
-                        {activeInsight.topics.map((topic) => <span key={topic}>✓ {topic}</span>)}
+                        {activePlace.topics.map((topic) => <span key={topic}>{topic}</span>)}
                     </div>
-                    <a href="https://dddp.gov.gh/" target="_blank" rel="noopener noreferrer">
-                        Explore in the reporting tool
+                    <Link to={activePlace.href}>
+                        {activePlace.linkLabel}
                         <span className="insight-panel__link-icon"><ExternalArrowIcon /></span>
-                    </a>
+                    </Link>
                 </div>
                 <div className="insight-panel__visual">
                     <div className="insight-panel__image-wrap">
-                        <img src={activeInsight.image} alt={`${activeInsight.label} data illustration`} />
+                        <img src={activePlace.image} alt={`${activePlace.label} public information context`} loading="lazy" decoding="async" />
                     </div>
-                    <div className="insight-panel__badge"><i /> Connected district data</div>
+                    <div className="insight-panel__badge"><i /> Ghana to region to district</div>
                 </div>
-            </div>
-        </section>
+            </PublicMotionItem>
+        </PublicMotionSection>
     )
 }
 

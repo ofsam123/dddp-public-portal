@@ -28,16 +28,8 @@ export const getAllCities = () => {
 }
 
 export const getClimatesByRegion = async () => {
-    const username = 'msow';
-    const password = 'dpGhana@2022';
-    const encodedCredentials = btoa(`${username}:${password}`);
-
     try {
-        const response = await axios.get('https://dddp.gov.gh/api/organisationUnits?level=2', {
-            headers: {
-                'Authorization': `Basic ${encodedCredentials}`
-            }
-        })
+        const response = await axios.get('https://dddp.gov.gh/api/organisationUnits?level=2')
         return response.data
     } catch (error) {
         return console.error(error)
@@ -45,16 +37,8 @@ export const getClimatesByRegion = async () => {
 }
 
 export const getClimatesByDistrictIdAndRegion = async (regionId) => {
-    const username = 'msow';
-    const password = 'dpGhana@2022';
-    const encodedCredentials = btoa(`${username}:${password}`);
-
     try {
-        const response = await axios.get(`https://dddp.gov.gh/api/organisationUnits/${regionId}`, {
-            headers: {
-                'Authorization': `Basic ${encodedCredentials}`
-            }
-        })
+        const response = await axios.get(`https://dddp.gov.gh/api/organisationUnits/${regionId}`)
         return response.data
     } catch (error) {
         return console.error(error)
@@ -64,16 +48,8 @@ export const getClimatesByDistrictIdAndRegion = async (regionId) => {
 
 
 export const getAllClimatesByRegion = async () => {
-    const username = 'msow';
-    const password = 'dpGhana@2022';
-    const encodedCredentials = btoa(`${username}:${password}`);
-
     try {
-        const response = await axios.get('https://dddp.gov.gh/api/organisationUnits?level=3&paging=false', {
-            headers: {
-                'Authorization': `Basic ${encodedCredentials}`
-            }
-        })
+        const response = await axios.get('https://dddp.gov.gh/api/organisationUnits?level=3&paging=false')
         return response.data
     } catch (error) {
         return console.error(error)
@@ -82,16 +58,8 @@ export const getAllClimatesByRegion = async () => {
 
 export const getReportByDistrictId = async (districtId) => {
     console.log("Selected District id", districtId)
-    const username = 'msow';
-    const password = 'dpGhana@2022';
-    const encodedCredentials = btoa(`${username}:${password}`);
-
     try {
-        const response = await axios.get(`https://dddp.gov.gh/api/tracker/events?program=k5Lg8ikNUCh&orgUnit=${districtId}`, {
-            headers: {
-                'Authorization': `Basic ${encodedCredentials}`
-            }
-        })
+        const response = await axios.get(`https://dddp.gov.gh/api/tracker/events?program=k5Lg8ikNUCh&orgUnit=${districtId}`)
         return response.data
     } catch (error) {
         return console.error(error)
@@ -99,29 +67,13 @@ export const getReportByDistrictId = async (districtId) => {
 }
 
 export const getReportByDistrictidAndDate = async (districtId, startDate, endDate) => {
-    const username = 'msow';
-    const password = 'dpGhana@2022';
-    const encodedCredentials = btoa(`${username}:${password}`);
-
-    return axios.get(`http://dddp.gov.gh/api/events.json?program=k5Lg8ikNUCh&orgUnit=${districtId}&startDate=${startDate}&endDate=${endDate}`, {
-        headers: {
-            'Authorization': `Basic ${encodedCredentials}`
-        }
-    })
+    return axios.get(`http://dddp.gov.gh/api/events.json?program=k5Lg8ikNUCh&orgUnit=${districtId}&startDate=${startDate}&endDate=${endDate}`)
     .then(response => response.data)
     .catch(error => console.error(error));
 }
 
 export const getAllTrackedInstancesByOrgUnit = async (districtId) => {
-    const username = 'msow';
-    const password = 'dpGhana@2022';
-    const encodedCredentials = btoa(`${username}:${password}`);
-
-    return axios.get(`https://dddp.gov.gh/api/tracker/trackedEntities?orgUnit=${districtId}&program=k5Lg8ikNUCh&paging=false`, {
-        headers: {
-            'Authorization': `Basic ${encodedCredentials}`
-        }
-    })
+    return axios.get(`https://dddp.gov.gh/api/tracker/trackedEntities?orgUnit=${districtId}&program=k5Lg8ikNUCh&paging=false`)
     .then(response => response.data)
     .catch(error => console.error(error));
 }

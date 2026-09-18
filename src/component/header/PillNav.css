@@ -7,27 +7,9 @@
     height: 0;
 }
 
-.pill-nav-shell--home .pill-logo {
-    position: relative;
-    width: 210px;
-    height: var(--nav-h);
-    padding: 0 10px;
-    border-radius: 999px;
-}
-
-.pill-nav-shell--home .pill-logo img {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    width: calc(100% - 20px);
-    max-width: none;
-    height: auto;
-    transform: translateY(-50%);
-}
-
 .pill-nav-shell--page {
     height: 78px;
-    background: #f3f9fc;
+    background: var(--color-background, #f5f8fb);
 }
 
 .pill-nav-container {
@@ -50,40 +32,11 @@
     gap: 16px;
 }
 
-.pill-logo {
-    width: 218px;
-    height: var(--nav-h);
-    flex-shrink: 0;
-    padding: 7px 14px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: var(--pill-bg, #fff);
-    border: 1px solid rgba(255, 255, 255, 0.72);
-    border-radius: 999px;
-    box-shadow: 0 10px 26px rgba(10, 58, 84, 0.13);
-    transition: transform 220ms ease, box-shadow 220ms ease;
-}
-
-.pill-logo:hover,
-.pill-logo:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px rgba(10, 58, 84, 0.18);
-}
-
-.pill-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
 .pill-nav-items {
     height: var(--nav-h);
     display: flex;
     align-items: center;
-    background: var(--base, #0f608e);
+    background: var(--base, var(--color-primary, #16325A));
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 999px;
     box-shadow: 0 12px 28px rgba(10, 58, 84, 0.18);
@@ -112,7 +65,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    color: var(--pill-text, #153e5c);
+    color: var(--pill-text, var(--color-primary, #16325A));
     background: var(--pill-bg, #fff);
     border-radius: 999px;
     font-size: 0.78rem;
@@ -130,7 +83,6 @@
 }
 
 .pill:focus-visible,
-.pill-logo:focus-visible,
 .mobile-menu-button:focus-visible,
 .mobile-menu-link:focus-visible {
     outline: 3px solid #8ce3ff;
@@ -144,7 +96,7 @@
     z-index: 1;
     width: 180px;
     height: 150px;
-    background: var(--base, #0f608e);
+    background: var(--base, var(--color-primary, #16325A));
     border-radius: 50%;
     transform: translateX(-50%) scale(0);
     transform-origin: 50% 100%;
@@ -191,12 +143,12 @@
 }
 
 .pill.is-active {
-    box-shadow: inset 0 -4px 0 #66ccec;
+    box-shadow: inset 0 -4px 0 #d6a84f;
 }
 
 .pill--action {
-    --pill-bg: #dff6ff;
-    color: #0f608e;
+    --pill-bg: #f0c76a;
+    color: var(--color-primary-hover, #0D1F3A);
 }
 
 .desktop-only {
@@ -217,7 +169,7 @@
     flex-direction: column;
     gap: 5px;
     color: #fff;
-    background: var(--base, #0f608e);
+    background: var(--base, var(--color-primary, #16325A));
     border: 1px solid rgba(255, 255, 255, 0.34);
     border-radius: 50%;
     box-shadow: 0 10px 24px rgba(10, 58, 84, 0.2);
@@ -247,7 +199,7 @@
     padding: 6px;
     visibility: hidden;
     opacity: 0;
-    background: var(--base, #0f608e);
+    background: var(--base, var(--color-primary, #16325A));
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 24px;
     box-shadow: 0 20px 46px rgba(8, 47, 70, 0.24);
@@ -277,7 +229,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--pill-text, #153e5c);
+    color: var(--pill-text, var(--color-primary, #16325A));
     background: var(--pill-bg, #fff);
     border-radius: 999px;
     font-size: 0.95rem;
@@ -291,16 +243,17 @@
 .mobile-menu-link.is-active {
     padding-left: 22px;
     color: #fff;
-    background: #1675aa;
+    background: var(--color-primary-hover, #0D1F3A);
+}
+
+.mobile-menu-link--action {
+    color: var(--color-primary-hover, #0D1F3A);
+    background: #f0c76a;
 }
 
 @media (max-width: 1160px) {
     .pill-nav {
         --pill-pad-x: 12px;
-    }
-
-    .pill-logo {
-        width: 190px;
     }
 
     .pill {
@@ -322,10 +275,6 @@
         --nav-h: 48px;
     }
 
-    .pill-logo {
-        width: 200px;
-    }
-
     .desktop-only {
         display: none;
     }
@@ -339,15 +288,7 @@
     }
 }
 
-@media (max-width: 430px) {
-    .pill-logo {
-        width: 188px;
-        padding-inline: 12px;
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
-    .pill-logo,
     .hover-circle,
     .pill-label,
     .pill-label-hover,

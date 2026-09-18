@@ -15,8 +15,6 @@ const ClimateChangeCarrousel = ({ dataElementId, dataElementUids, currentPage })
     const [imgSrcs, setImgSrcs] = useState([]);
 
     useEffect(() => {
-        const username = 'msow';
-        const password = 'dpGhana@2022';
         const promises = [];
 
         // Only fetch images for the current page
@@ -27,11 +25,7 @@ const ClimateChangeCarrousel = ({ dataElementId, dataElementUids, currentPage })
             currentPageDataElementUids.forEach(dataElementUid => {
                 const url = `https://dddp.gov.gh/api/events/files?eventUid=${id}&dataElementUid=${dataElementUid}`;
         
-                const promise = fetch(url, {
-                    headers: new Headers({
-                        'Authorization': 'Basic ' + btoa(username + ":" + password),
-                    }),
-                })
+                const promise = fetch(url)
                     .then(response => {
                         if (response.status !== 200) {
                             throw new Error(`HTTP error! status: ${response.status}`);
