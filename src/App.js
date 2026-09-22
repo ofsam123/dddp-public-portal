@@ -33,6 +33,7 @@ const Marine = lazyRoute(() => import('./component/lisa-platform/information/Mar
 const Seasonal = lazyRoute(() => import('./component/lisa-platform/information/Seasonal'));
 const Dashboard = lazyRoute(() => import('./component/lisa-platform/dashbaord/Dashboard'));
 const ClimateChange = lazyRoute(() => import('./component/lisa-platform/climate/ClimateChange'));
+const PublicRouteShell = lazyRoute(() => import('./component/public-pages/PublicRouteShell'));
 
 function App() {
   return (
@@ -69,6 +70,11 @@ function App() {
             <Route path='/marine' element={<Marine/>} />
             <Route path='seasonal' element={<Seasonal />} />
             <Route path='/dashboard' element= {<Dashboard />} />
+            <Route path='/dpat/assessment' element={<PublicRouteShell title="DPAT Assessment" />} />
+            <Route path='/dpat/performance-analysis' element={<PublicRouteShell title="Performance Analysis" />} />
+            <Route path='/data-statistics/development-dimension' element={<PublicRouteShell title="Development Dimension" />} />
+            <Route path='/apr/mmda' element={<PublicRouteShell title="MMDA APR" />} />
+            <Route path='/apr/rcc' element={<PublicRouteShell title="RCC APR" />} />
 
           </Routes>
         </Suspense>

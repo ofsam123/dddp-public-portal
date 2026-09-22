@@ -298,3 +298,15 @@
         transition: none;
     }
 }
+
+.pill-group { position: relative; }
+button.pill { border: 0; font-family: inherit; cursor: pointer; }
+.pill-group__chevron { position: relative; z-index: 2; margin-left: 6px; }
+.pill-group__popover { position: absolute; top: calc(100% + 10px); left: 50%; min-width: 220px; padding: 7px; visibility: hidden; opacity: 0; background: #16325a; border: 1px solid rgba(255,255,255,.24); border-radius: 8px; box-shadow: 0 18px 36px rgba(8,31,58,.25); transform: translate(-50%, -6px); transition: opacity 160ms ease, transform 160ms ease, visibility 160ms; }
+.pill-group__popover.is-open { visibility: visible; opacity: 1; transform: translate(-50%, 0); }
+.pill-group__popover ul, .mobile-submenu { margin: 0; padding: 0; list-style: none; }
+.pill-group__popover .pill { width: 100%; min-height: 42px; height: auto; justify-content: flex-start; border-radius: 4px; text-transform: none; letter-spacing: 0; }
+.mobile-menu-group { width: 100%; border: 0; font-family: inherit; }
+.mobile-submenu { display: grid; gap: 4px; margin: 4px 10px 8px; }
+.mobile-submenu .mobile-menu-link { min-height: 43px; padding-left: 28px; border-radius: 6px; font-size: .88rem; }
+@media (max-width: 1160px) { .pill-nav { --pill-pad-x: 9px; } .pill { font-size: .64rem; } }

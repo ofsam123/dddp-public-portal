@@ -4,8 +4,9 @@ import NavBar from '../header/NavBar'
 import PublicFooter from '../footer/PublicFooter'
 import DataPageHeader from './components/DataPageHeader'
 import GeographyBrowser from './components/GeographyBrowser'
-import KpiGrid from './components/KpiGrid'
+import DatasetSummary from './components/DatasetSummary'
 import PublicState from './components/PublicState'
+import usePublicDataset from './hooks/usePublicDataset'
 import usePublicGeography from './hooks/usePublicGeography'
 import usePublicSummary from './hooks/usePublicSummary'
 import usePublicYear from './hooks/usePublicYear'
@@ -48,14 +49,14 @@ const buildBreadcrumbs = ({ region, district, withYear }) => {
     return items
 }
 
-const GeographyTemplate = ({ geography, geographyData, region, district, districts, publicYear }) => {
+const GeographyTemplate = ({ geography, geographyData, region, district, districts, publicDataset, publicYear }) => {
     const { summaryData, isLoading } = usePublicSummary({
-        geography,
+        geography: ['projects-programmes', 'meetings'].includes(publicDataset.key) ? geography : null,
         regionSlug: region?.slug,
         year: publicYear.year,
     })
     const { regionalSummaries, nationalSummary } = useRegionalSummaries({
-        enabled: geography.level === 'region',
+        enabled: publicDataset.key === 'projects-programmes' && geography.level === 'region',
         year: publicYear.year,
     })
     const summary = getPublicSummary(geography, summaryData)
@@ -85,6 +86,7 @@ const GeographyTemplate = ({ geography, geographyData, region, district, distric
                         {district && <Link className="explore-button explore-button--secondary" to={publicYear.withYear(`/explore/regions/${region.slug}`)}>Back to {region.name}</Link>}
                     </>
                 ) : null}
+                publicDataset={publicDataset}
                 publicYear={publicYear}
                 source={summaryData?.meta.source}
                 retrievedAt={summaryData?.meta.retrievedAt}
@@ -94,9 +96,9 @@ const GeographyTemplate = ({ geography, geographyData, region, district, distric
                 <div className="explore-section__heading">
                     <span className="section-kicker">Public indicators</span>
                     <h2>{geography.name} at a glance</h2>
-                    <p>Current DDDP project, programme and meeting counts for this geography.</p>
+                    <p>{publicDataset.key === 'projects-programmes' ? 'Projects and programmes whose expected implementation period overlaps the selected year.' : publicDataset.dataset.label + ' for this geography and selected year.'}</p>
                 </div>
-                <KpiGrid items={summary.kpis} context={summary.kpiContext} comparisons={comparisons} isLoading={isLoading} />
+                <DatasetSummary dataset={publicDataset.dataset} geography={geography} region={region} year={publicYear.year} projectSummary={summary} comparisons={comparisons} isProjectLoading={isLoading} />
             </section>
 
             {geography.level === 'national' && (
@@ -126,6 +128,7 @@ const GeographyTemplate = ({ geography, geographyData, region, district, distric
 export const ExploreLanding = () => {
     const { geographyData } = usePublicGeography()
     const publicYear = usePublicYear()
+    const publicDataset = usePublicDataset()
 
     return (
         <PageShell>
@@ -135,6 +138,7 @@ export const ExploreLanding = () => {
                 title="Explore public DDDP information by place."
                 description="Start with Ghana, compare regions, then open district/MMDA pages for local public indicators."
                 actions={<Link className="explore-button explore-button--primary" to={publicYear.withYear('/explore/ghana')}>Start with Ghana</Link>}
+                publicDataset={publicDataset}
                 publicYear={publicYear}
                 source={publicYear.availability?.source}
                 retrievedAt={publicYear.availability?.retrievedAt}
@@ -153,10 +157,11 @@ export const ExploreLanding = () => {
 export const GhanaOverview = () => {
     const { geographyData } = usePublicGeography()
     const publicYear = usePublicYear()
+    const publicDataset = usePublicDataset()
 
     return (
         <PageShell>
-            <GeographyTemplate geography={getNationalGeography()} geographyData={geographyData} publicYear={publicYear} />
+            <GeographyTemplate geography={getNationalGeography()} geographyData={geographyData} publicDataset={publicDataset} publicYear={publicYear} />
         </PageShell>
     )
 }
@@ -165,6 +170,7 @@ export const RegionPage = () => {
     const { regionSlug } = useParams()
     const { geographyData } = usePublicGeography()
     const publicYear = usePublicYear()
+    const publicDataset = usePublicDataset()
     const region = getRegionBySlug(regionSlug, geographyData)
 
     if (!region) {
@@ -180,7 +186,8 @@ export const RegionPage = () => {
                     title="We could not find that region."
                     description="The link may be outdated, or that region may not be available here yet."
                     actions={<Link className="explore-button explore-button--primary" to={publicYear.withYear('/explore/ghana')}>Browse Ghana regions</Link>}
-                    publicYear={publicYear}
+                    publicDataset={publicDataset}
+                publicYear={publicYear}
                 />
             </PageShell>
         )
@@ -193,6 +200,7 @@ export const RegionPage = () => {
                 geographyData={geographyData}
                 region={region}
                 districts={getDistricts(region.id, geographyData)}
+                publicDataset={publicDataset}
                 publicYear={publicYear}
             />
         </PageShell>
@@ -203,6 +211,7 @@ export const DistrictPage = () => {
     const { regionSlug, districtSlug } = useParams()
     const { geographyData, isLoading } = usePublicGeography()
     const publicYear = usePublicYear()
+    const publicDataset = usePublicDataset()
     const region = getRegionBySlug(regionSlug, geographyData)
     const district = region ? getDistrictBySlug(region.id, districtSlug, geographyData) : null
 
@@ -218,7 +227,8 @@ export const DistrictPage = () => {
                     eyebrow="District / MMDA overview"
                     title="Loading district information"
                     description="Preparing the selected public geography and data context."
-                    publicYear={publicYear}
+                    publicDataset={publicDataset}
+                publicYear={publicYear}
                 />
                 <PublicState status="loading" title="Loading district information" />
             </PageShell>
@@ -238,7 +248,8 @@ export const DistrictPage = () => {
                     title="We could not find that district/MMDA."
                     description="The link may be outdated, or that district/MMDA may not be available here yet."
                     actions={<Link className="explore-button explore-button--primary" to={publicYear.withYear('/explore/ghana')}>Browse Ghana regions</Link>}
-                    publicYear={publicYear}
+                    publicDataset={publicDataset}
+                publicYear={publicYear}
                 />
             </PageShell>
         )
@@ -251,6 +262,7 @@ export const DistrictPage = () => {
                 geographyData={geographyData}
                 region={region}
                 district={district}
+                publicDataset={publicDataset}
                 publicYear={publicYear}
             />
         </PageShell>

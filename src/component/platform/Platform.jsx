@@ -37,7 +37,7 @@ const Platform = ({
                 <div className="platform-access__heading">
                     <span className="section-kicker">National snapshot</span>
                     <h2 id="platform-access-title">Ghana at a glance</h2>
-                    <p>Current DDDP project, programme and meeting counts for Ghana.</p>
+                    <p>Projects and programmes active during the selected year, based on expected implementation dates, alongside recorded meetings.</p>
                 </div>
                 <div className="platform-access__context" aria-label="National indicator context">
                     <PublicYearSelector

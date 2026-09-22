@@ -15,6 +15,7 @@ const {
     createRegionalSummaryLoader,
     PublicSummaryError,
 } = require('./publicSummary')
+const { createDddpAapSummaryAdapter, createDddpPwdaProgrammesSummaryAdapter } = require('./publicDatasetAggregates')
 
 const PORT = Number(process.env.PORT || 3001)
 const BUILD_DIR = path.resolve(__dirname, '..', 'build')
@@ -45,6 +46,8 @@ let availableYearsCache = null
 let availableYearsPending = null
 let nationalBreakdownsAdapter = null
 let activitySeriesLoader = null
+let aapSummaryAdapter = null
+let pwdaProgrammesSummaryAdapter = null
 const summaryCache = new Map()
 const summaryPending = new Map()
 const regionalSummaryCache = new Map()
@@ -53,6 +56,8 @@ const nationalBreakdownsCache = new Map()
 const nationalBreakdownsPending = new Map()
 const activitySeriesCache = new Map()
 const activitySeriesPending = new Map()
+const datasetSummaryCache = new Map()
+const datasetSummaryPending = new Map()
 
 const sendJson = (response, statusCode, body) => {
     response.writeHead(statusCode, {
@@ -207,6 +212,35 @@ const loadActivitySeries = async ({ from, to }) => {
     return pending
 }
 
+const getDatasetSummaryAdapter = (dataset) => {
+    if (dataset === 'aap') {
+        if (!aapSummaryAdapter) aapSummaryAdapter = createDddpAapSummaryAdapter({
+            baseURL: process.env.DDDP_API_BASE_URL,
+            username: process.env.DDDP_API_USERNAME,
+            password: process.env.DDDP_API_PASSWORD,
+            loadGeographyContext,
+        })
+        return aapSummaryAdapter
+    }
+    if (!pwdaProgrammesSummaryAdapter) pwdaProgrammesSummaryAdapter = createDddpPwdaProgrammesSummaryAdapter({ loadGeographyContext })
+    return pwdaProgrammesSummaryAdapter
+}
+
+const loadDatasetSummary = (dataset, input) => {
+    const key = `${dataset}|${input.year || ''}|${input.regionSlug || ''}|${input.districtSlug || ''}`
+    const cached = datasetSummaryCache.get(key)
+    if (cached && Date.now() - cached.createdAt < CACHE_TTL_MS) return Promise.resolve(cached.value)
+    if (datasetSummaryPending.has(key)) return datasetSummaryPending.get(key)
+    const pending = getDatasetSummaryAdapter(dataset)(input)
+        .then((value) => {
+            datasetSummaryCache.set(key, { createdAt: Date.now(), value })
+            return value
+        })
+        .finally(() => datasetSummaryPending.delete(key))
+    datasetSummaryPending.set(key, pending)
+    return pending
+}
+
 const handlePublicGeography = async (response) => {
     try {
         const value = await loadGeographyContext()
@@ -309,6 +343,24 @@ const handlePublicActivitySeries = async (requestUrl, response) => {
     }
 }
 
+const handlePublicDatasetSummary = async (dataset, requestUrl, response) => {
+    try {
+        const value = await loadDatasetSummary(dataset, {
+            year: requestUrl.searchParams.get('year'),
+            regionSlug: requestUrl.searchParams.get('regionSlug') || undefined,
+            districtSlug: requestUrl.searchParams.get('districtSlug') || undefined,
+        })
+        sendJson(response, 200, value)
+    } catch (error) {
+        if (error instanceof PublicSummaryError) {
+            sendJson(response, error.statusCode, { error: error.message })
+            return
+        }
+        console.error(`Public ${dataset} summary refresh failed (${error.code || error.name || 'request-error'})`)
+        sendJson(response, 503, { error: `Public ${dataset} summary is temporarily unavailable.` })
+    }
+}
+
 const sendStaticFile = (request, requestPath, response) => {
     const requestedFile = requestPath === '/' ? 'index.html' : requestPath.replace(/^\/+/, '')
     const resolvedFile = path.resolve(BUILD_DIR, requestedFile)
@@ -380,6 +432,16 @@ const server = http.createServer(async (request, response) => {
 
     if (request.method === 'GET' && requestUrl.pathname === '/api/public/activity-series') {
         await handlePublicActivitySeries(requestUrl, response)
+        return
+    }
+
+    if (request.method === 'GET' && requestUrl.pathname === '/api/public/aap-summary') {
+        await handlePublicDatasetSummary('aap', requestUrl, response)
+        return
+    }
+
+    if (request.method === 'GET' && requestUrl.pathname === '/api/public/pwda-programmes-summary') {
+        await handlePublicDatasetSummary('pwda-programmes', requestUrl, response)
         return
     }
 

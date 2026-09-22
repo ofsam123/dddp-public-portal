@@ -1,0 +1,5 @@
+.public-dataset-selector { display: grid; gap: 6px; justify-items: end; width: min(100%, 260px); }
+.public-dataset-selector > span { color: rgba(255,255,255,.64); font-size: .68rem; font-weight: 800; text-transform: uppercase; }
+.public-dataset-selector select { width: 100%; min-height: 42px; padding: 0 34px 0 12px; border: 1px solid rgba(22,50,90,.22); border-radius: 4px; color: #16325a; background: #fff; font: inherit; font-size: .86rem; font-weight: 800; }
+.public-dataset-selector select:focus-visible { outline: 3px solid rgba(196,154,44,.55); outline-offset: 2px; }
+@media (max-width: 880px) { .public-dataset-selector { justify-items: start; } }

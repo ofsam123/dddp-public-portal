@@ -1,6 +1,7 @@
 import React from 'react'
 import ExploreBreadcrumbs from './ExploreBreadcrumbs'
 import PublicYearSelector from './PublicYearSelector'
+import PublicDatasetSelector from './PublicDatasetSelector'
 
 const formatRetrievedAt = (value) => {
     if (!value) return null
@@ -14,6 +15,7 @@ const DataPageHeader = ({
     breadcrumbs,
     description,
     eyebrow,
+    publicDataset,
     publicYear,
     retrievedAt,
     source,
@@ -32,6 +34,7 @@ const DataPageHeader = ({
                     {actions && <div className="explore-data-header__actions">{actions}</div>}
                 </div>
                 <div className="explore-data-header__context">
+                    {publicDataset && <PublicDatasetSelector value={publicDataset.key} onChange={publicDataset.setDataset} />}
                     <PublicYearSelector
                         year={publicYear.year}
                         years={publicYear.years}

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { loadPublicAvailableYears } from '../services/publicDataService'
+import { isPublicDatasetKey } from '../data/publicDatasets'
 
 const parseQueryYear = (value) => {
     if (!/^\d{4}$/.test(value || '')) return null
@@ -47,8 +48,10 @@ const usePublicYear = () => {
         const [pathname, query = ''] = destination.split('?')
         const params = new URLSearchParams(query)
         params.set('year', String(year))
+        const currentDataset = searchParams.get('dataset')
+        if (isPublicDatasetKey(currentDataset)) params.set('dataset', currentDataset)
         return `${pathname}?${params.toString()}`
-    }, [year])
+    }, [searchParams, year])
 
     return { availability, isLoading, setYear, withYear, year, years }
 }

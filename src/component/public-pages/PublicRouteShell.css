@@ -1,0 +1,2 @@
+.public-route-shell { min-height: 64vh; padding: 150px max(24px, calc((100% - 1180px)/2)) 96px; color: #16325a; background: #f6f9fc; }
+.public-route-shell h1 { max-width: 760px; margin: 0; font-size: clamp(2.2rem, 5vw, 4.4rem); line-height: 1.05; }
