@@ -12,6 +12,10 @@
     background: var(--color-background, #f5f8fb);
 }
 
+.pill-nav-shell--explore {
+    background: var(--color-primary, #16325A);
+}
+
 .pill-nav-container {
     position: absolute;
     top: 16px;

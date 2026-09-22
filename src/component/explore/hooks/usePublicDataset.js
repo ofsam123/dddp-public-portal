@@ -12,6 +12,7 @@ const usePublicDataset = () => {
         const next = new URLSearchParams(searchParams)
         if (nextKey === DEFAULT_PUBLIC_DATASET) next.delete('dataset')
         else next.set('dataset', nextKey)
+        if (nextKey !== DEFAULT_PUBLIC_DATASET) next.delete('view')
         setSearchParams(next)
     }, [searchParams, setSearchParams])
 

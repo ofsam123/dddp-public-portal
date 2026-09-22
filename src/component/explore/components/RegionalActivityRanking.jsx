@@ -11,8 +11,9 @@ const RegionalActivityRanking = ({
     year,
     indicatorKey,
     onIndicatorChange,
+    indicators = PUBLIC_INDICATORS,
 }) => {
-    const indicator = PUBLIC_INDICATORS.find((item) => item.key === indicatorKey) || PUBLIC_INDICATORS[0]
+    const indicator = indicators.find((item) => item.key === indicatorKey) || indicators[0]
     const rankedRegions = useMemo(() => (
         regions
             .filter((region) => Number.isInteger(region.kpis?.[indicator.key]))
@@ -33,8 +34,8 @@ const RegionalActivityRanking = ({
                     <h3 id="regional-activity-ranking-title">Regional Activity Ranking</h3>
                     <p>Compare reported activity across Ghana's regions in {year || 'the selected year'}.</p>
                 </div>
-                <div className="regional-activity-ranking__indicators" aria-label="Regional ranking indicator">
-                    {PUBLIC_INDICATORS.map((item) => (
+                {indicators.length > 1 && <div className="regional-activity-ranking__indicators" aria-label="Projects and programmes ranking view">
+                    {indicators.map((item) => (
                         <button
                             type="button"
                             className={item.key === indicator.key ? 'is-active' : undefined}
@@ -45,7 +46,7 @@ const RegionalActivityRanking = ({
                             {item.label}
                         </button>
                     ))}
-                </div>
+                </div>}
             </div>
 
             {rankedRegions.length > 0 ? (

@@ -10,6 +10,7 @@ import usePublicDataset from './hooks/usePublicDataset'
 import usePublicGeography from './hooks/usePublicGeography'
 import usePublicSummary from './hooks/usePublicSummary'
 import usePublicYear from './hooks/usePublicYear'
+import useProjectProgrammeView from './hooks/useProjectProgrammeView'
 import useRegionalSummaries from './hooks/useRegionalSummaries'
 import {
     getDistrictBySlug,
@@ -50,6 +51,7 @@ const buildBreadcrumbs = ({ region, district, withYear }) => {
 }
 
 const GeographyTemplate = ({ geography, geographyData, region, district, districts, publicDataset, publicYear }) => {
+    const projectProgrammeView = useProjectProgrammeView()
     const { summaryData, isLoading } = usePublicSummary({
         geography: ['projects-programmes', 'meetings'].includes(publicDataset.key) ? geography : null,
         regionSlug: region?.slug,
@@ -108,6 +110,9 @@ const GeographyTemplate = ({ geography, geographyData, region, district, distric
                     regions={getRegions(geographyData)}
                     year={publicYear.year}
                     withYear={publicYear.withYear}
+                    trackerKey={publicDataset.key}
+                    projectProgrammeView={projectProgrammeView.view}
+                    onProjectProgrammeViewChange={projectProgrammeView.setView}
                 />
             )}
 
@@ -118,6 +123,9 @@ const GeographyTemplate = ({ geography, geographyData, region, district, distric
                     districts={districts}
                     year={publicYear.year}
                     withYear={publicYear.withYear}
+                    trackerKey={publicDataset.key}
+                    projectProgrammeView={projectProgrammeView.view}
+                    onProjectProgrammeViewChange={projectProgrammeView.setView}
                 />
             )}
 
@@ -129,6 +137,7 @@ export const ExploreLanding = () => {
     const { geographyData } = usePublicGeography()
     const publicYear = usePublicYear()
     const publicDataset = usePublicDataset()
+    const projectProgrammeView = useProjectProgrammeView()
 
     return (
         <PageShell>
@@ -149,6 +158,9 @@ export const ExploreLanding = () => {
                 regions={getRegions(geographyData)}
                 year={publicYear.year}
                 withYear={publicYear.withYear}
+                trackerKey={publicDataset.key}
+                projectProgrammeView={projectProgrammeView.view}
+                onProjectProgrammeViewChange={projectProgrammeView.setView}
             />
         </PageShell>
     )

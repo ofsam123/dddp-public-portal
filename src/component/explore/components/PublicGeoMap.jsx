@@ -32,6 +32,7 @@ const PublicGeoMap = ({
     summaryYear,
     nationalSummary,
     indicatorKey,
+    indicators = PUBLIC_INDICATORS,
     onIndicatorChange,
     withYear = (path) => path,
 }) => {
@@ -39,7 +40,7 @@ const PublicGeoMap = ({
     const regionsByName = new Map(regions.map((region) => [normalizeRegionName(region.name), region]))
     const activeRegion = regions.find((region) => region.slug === activeRegionSlug)
     const activeSummary = activeRegion ? summariesBySlug.get(activeRegion.slug) : null
-    const indicator = PUBLIC_INDICATORS.find((item) => item.key === indicatorKey) || PUBLIC_INDICATORS[0]
+    const indicator = indicators.find((item) => item.key === indicatorKey) || indicators[0]
     const values = regions
         .map((region) => summariesBySlug.get(region.slug)?.kpis?.[indicator.key])
         .filter(Number.isFinite)
@@ -64,8 +65,8 @@ const PublicGeoMap = ({
                 <div>
                     <span className="section-kicker">Regional map</span>
                     <h3 id="ghana-region-map-title">Ghana's 16 regions</h3>
-                    <div className="public-geo-map__indicators" aria-label="Map indicator">
-                        {PUBLIC_INDICATORS.map((item) => (
+                    {indicators.length > 1 && <div className="public-geo-map__indicators" aria-label="Projects and programmes view">
+                        {indicators.map((item) => (
                             <button
                                 type="button"
                                 className={indicator.key === item.key ? 'is-active' : ''}
@@ -76,7 +77,7 @@ const PublicGeoMap = ({
                                 {item.label}
                             </button>
                         ))}
-                    </div>
+                    </div>}
                 </div>
                 <div className="public-geo-map__status" aria-live="polite">
                     <strong>{activeRegion ? activeRegion.name : 'Select a region'}</strong>
