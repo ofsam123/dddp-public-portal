@@ -1,0 +1,268 @@
+.lisa-forecast {
+    width: min(1180px, calc(100% - 48px));
+    margin: -74px auto 0;
+    padding: 34px;
+    position: relative;
+    z-index: 4;
+    background: #fff;
+    border: 1px solid #dbeaf0;
+    border-radius: 22px;
+    box-shadow: 0 28px 65px rgba(16, 79, 103, 0.14);
+}
+
+.lisa-forecast__heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    padding-bottom: 25px;
+    text-align: left;
+    border-bottom: 1px solid #e2edf1;
+}
+
+.lisa-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+    color: #118a8c;
+    font-size: 0.84rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.lisa-kicker::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: #39c4c0;
+}
+
+.lisa-forecast h2 {
+    margin: 0;
+    color: #123f56;
+    font-size: clamp(1.9rem, 3vw, 2.8rem);
+    letter-spacing: -0.04em;
+}
+
+.lisa-forecast__heading label {
+    min-width: 230px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #6d8793;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.lisa-forecast__heading select {
+    min-height: 48px;
+    padding: 0 40px 0 14px;
+    color: #19485d;
+    background: #f2f9fa;
+    border: 1px solid #d5e8eb;
+    border-radius: 9px;
+    font-size: 0.9rem;
+    font-weight: 650;
+}
+
+.lisa-forecast__panel {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.9fr) minmax(450px, 1.1fr);
+    min-height: 260px;
+}
+
+.lisa-forecast__current {
+    padding: 34px 34px 34px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    text-align: left;
+    border-right: 1px solid #e2edf1;
+}
+
+.lisa-forecast__current > div:first-child > span {
+    color: #78919d;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.lisa-forecast__current h3 {
+    margin: 7px 0 5px;
+    color: #123f56;
+    font-size: 2rem;
+}
+
+.lisa-forecast__current p {
+    margin: 0;
+    color: #7c929d;
+    font-size: 0.84rem;
+}
+
+.lisa-forecast__temperature {
+    display: flex;
+    align-items: center;
+}
+
+.lisa-forecast__temperature svg {
+    width: 70px;
+    height: 70px;
+    fill: none;
+    stroke: #f3b83f;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.lisa-forecast__temperature .weather-cloud {
+    fill: #e5f7fb;
+    stroke: #29a4c1;
+}
+
+.lisa-forecast__temperature strong {
+    color: #123f56;
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(2.7rem, 4vw, 4.2rem);
+    letter-spacing: -0.07em;
+}
+
+.lisa-forecast__temperature small {
+    margin-left: 3px;
+    color: #78919d;
+    font-size: 0.9rem;
+    letter-spacing: 0;
+}
+
+.lisa-forecast__periods {
+    padding: 26px 0 26px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lisa-forecast__periods article {
+    min-height: 62px;
+    display: grid;
+    grid-template-columns: 36px 1fr 42px;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e2edf1;
+}
+
+.lisa-forecast__periods article:last-child {
+    border-bottom: 0;
+}
+
+.lisa-forecast__periods article > span {
+    color: #9ab0b9;
+    font-size: 0.65rem;
+    font-weight: 800;
+}
+
+.lisa-forecast__periods p {
+    margin: 0 0 2px;
+    color: #6f8792;
+    font-size: 0.72rem;
+}
+
+.lisa-forecast__periods strong {
+    color: #123f56;
+    font-size: 1.08rem;
+}
+
+.lisa-forecast__periods i {
+    width: 34px;
+    height: 20px;
+    border-bottom: 2px solid #45b9c0;
+    border-radius: 50%;
+    transform: rotate(-8deg);
+}
+
+.lisa-forecast__footer {
+    padding-top: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    border-top: 1px solid #e2edf1;
+}
+
+.lisa-forecast__footer p {
+    margin: 0;
+    color: #7a919c;
+    font-size: 0.78rem;
+}
+
+.lisa-forecast__footer a {
+    color: #118a8c;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.lisa-forecast__state {
+    grid-column: 1 / -1;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #6f8792;
+}
+
+.lisa-forecast__state i {
+    width: 11px;
+    height: 11px;
+    border: 2px solid #b7dfe4;
+    border-top-color: #118a8c;
+    border-radius: 50%;
+    animation: lisa-spin 800ms linear infinite;
+}
+
+.lisa-forecast__state--error {
+    flex-direction: column;
+}
+
+@keyframes lisa-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 850px) {
+    .lisa-forecast__panel {
+        grid-template-columns: 1fr;
+    }
+
+    .lisa-forecast__current {
+        padding-right: 0;
+        border-right: 0;
+        border-bottom: 1px solid #e2edf1;
+    }
+
+    .lisa-forecast__periods {
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .lisa-forecast {
+        width: calc(100% - 30px);
+        margin-top: -45px;
+        padding: 22px;
+    }
+
+    .lisa-forecast__heading,
+    .lisa-forecast__footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .lisa-forecast__heading label {
+        min-width: 0;
+    }
+
+    .lisa-forecast__current {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

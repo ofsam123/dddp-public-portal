@@ -1,0 +1,36 @@
+.public-year-selector {
+    display: grid;
+    gap: 6px;
+    justify-items: end;
+}
+
+.public-year-selector > span {
+    color: var(--color-text-muted, #5f6f82);
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.public-year-selector select {
+    min-width: 112px;
+    min-height: 40px;
+    padding: 0 34px 0 12px;
+    border: 1px solid rgba(22, 50, 90, 0.22);
+    border-radius: 4px;
+    color: var(--color-primary, #16325A);
+    background: #fff;
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 850;
+}
+
+.public-year-selector select:focus-visible {
+    outline: 3px solid rgba(196, 154, 44, 0.45);
+    outline-offset: 2px;
+}
+
+@media (max-width: 880px) {
+    .public-year-selector {
+        justify-items: start;
+    }
+}
