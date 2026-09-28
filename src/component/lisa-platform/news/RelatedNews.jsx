@@ -1,24 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-
 const RelatedNews = ({ newsItems = [] }) => {
+    if (!newsItems.length) return null
+
     return (
-        <div>
-            <div style={{ textAlign: 'left', width: '70%', margin: '0 auto', marginTop: '5rem', marginBottom: '8rem' }}>
-                <h4 style={{ color: '#0B6000', marginTop: '8rem', margin: '0 auto', marginBottom: '2rem' }}>
-                    Related News
-                </h4>
+        <section className="related-news" aria-labelledby="related-news-title">
+            <div className="related-news__inner">
+                <h2 id="related-news-title">Related stories</h2>
+                <div className="related-news__grid">
                 {newsItems.map(({ path, text }, index) => (
-                    <Link key={index} to={path} style={{ textDecoration: 'underline', color: '#244855' }}>
-                        <p style={{ fontSize: '1.1rem', lineHeight: '1rem', color: '#000' }}>
-                            {text}
-                        </p>
+                    <Link key={index} to={path} className="related-news__card">
+                        {text}
+                        <span aria-hidden="true">→</span>
                     </Link>
                 ))}
+                </div>
             </div>
-        </div>
-    );
-};
+        </section>
+    )
+}
 
 export default RelatedNews

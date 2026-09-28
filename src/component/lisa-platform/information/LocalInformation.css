@@ -1,117 +1,174 @@
-.card-style{
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-    border: 1px solid #fff !important;
+.lisa-products {
+    padding: 112px max(24px, calc((100% - 1180px) / 2));
+    background: #f1f8fa;
 }
 
-.card-style:hover{
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
-    transform: scale(1.05);
-    transition: all 0.3s ease;
-    border: 1px solid #fff !important;
+.lisa-products__heading {
+    margin-bottom: 42px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+    align-items: end;
+    gap: 70px;
+    text-align: left;
 }
 
-/* CSS for the eye icon with background color and tooltip */
-.card-style .read-more-icon, .card-style .share-icon {
+.lisa-products h2 {
+    max-width: 740px;
+    margin: 0;
+    color: #123f56;
+    font-size: clamp(2.3rem, 4vw, 3.65rem);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+}
+
+.lisa-products__heading > p {
+    margin: 0 0 4px;
+    color: #6d858f;
+    line-height: 1.75;
+}
+
+.lisa-products__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.lisa-product-card {
+    overflow: hidden;
+    color: #244b5d;
+    text-align: left;
+    text-decoration: none;
+    background: #fff;
+    border: 1px solid #dcebed;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(24, 91, 102, 0.07);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.lisa-product-card:hover {
+    color: #244b5d;
+    border-color: #9ed9d7;
+    box-shadow: 0 24px 46px rgba(24, 91, 102, 0.13);
+    transform: translateY(-6px);
+}
+
+.lisa-product-card__visual {
+    position: relative;
+    height: 165px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: linear-gradient(145deg, #e1f6f4, #e9f7fb);
+}
+
+.lisa-product-card__visual > span {
+    width: 68px;
+    height: 68px;
+    display: grid;
+    place-items: center;
+    color: #118a8c;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: 17px;
+    box-shadow: 0 14px 28px rgba(17, 138, 140, 0.12);
+}
+
+.lisa-product-card__visual svg {
+    width: 33px;
+    height: 33px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.lisa-product-card__visual.has-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 350ms ease;
+}
+
+.lisa-product-card:hover .lisa-product-card__visual.has-image img {
+    transform: scale(1.04);
+}
+
+.lisa-product-card__visual > i {
     position: absolute;
-    bottom: 20px;
-    right: 20px; 
-    display: flex;
-    flex-direction: column;
+    top: 14px;
+    right: 14px;
+    padding: 6px 8px;
+    color: #497985;
+    background: rgba(255, 255, 255, 0.86);
+    border-radius: 999px;
+    font-size: 0.63rem;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.lisa-product-card__content {
+    padding: 23px;
+}
+
+.lisa-product-card__content small {
+    color: #119598;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lisa-product-card h3 {
+    min-height: 52px;
+    margin: 8px 0 20px;
+    color: #123f56;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.lisa-product-card__content > span {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.6s ease-in-out;
-    background-color: #0B6000; 
-    padding: 7px 10px 5px;
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 8px;
+    color: #118a8c;
+    font-size: 0.82rem;
+    font-weight: 800;
 }
 
-.read-more-icon {
-    position: absolute;
-    bottom: 20px;
-    right: -50px; 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.6s ease-in-out;
-    background-color: #0B6000; 
-    padding: 7px 10px 5px;
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.lisa-product-card__content > span i {
+    font-style: normal;
+    transition: transform 180ms ease;
 }
 
-.share-icon {
-    position: absolute;
-    bottom: 20px;
-    right: -50px; 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.6s ease-in-out;
-    background-color: #0B6000; 
-    padding: 7px 10px 5px;
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.lisa-product-card:hover .lisa-product-card__content > span i {
+    transform: translateX(4px);
 }
 
-.card-style:hover .read-more-icon {
-    right: 20px; /* End position on the card */
-    opacity: 1;
+.lisa-products__loading {
+    margin-bottom: 18px;
+    color: #718a94;
+    font-size: 0.84rem;
+    text-align: left;
 }
 
-.card-style:hover .share-icon {
-    right: 70px; /* End position on the card */
-    opacity: 1;
+@media (max-width: 900px) {
+    .lisa-products__heading {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .lisa-products__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
-.card-style:hover .card-content {
-    filter: blur(1.5px); 
-}
+@media (max-width: 580px) {
+    .lisa-products {
+        padding: 78px 15px;
+    }
 
-.read-more-icon svg {
-    font-size: 16px;
-    margin-bottom: 5px;
-    color: #fff;
-}
-
-.share-icon svg {
-    font-size: 16px;
-    margin-bottom: 5px;
-    color: #fff;
-}
-
-.tooltip {
-    position: absolute;
-    right: 110%; /* Position to the left of the icon */
-    top: 50%;
-    transform: translateY(-50%);
-    white-space: nowrap;
-    background-color: #000;
-    color: #fff;
-    text-align: center;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none; /* Prevent tooltip from blocking hover events */
-    margin-right: 2rem;
-}
-
-.share-icon:hover .tooltip {
-    opacity: 1; /* Show tooltip on icon hover */
-}
-
-.read-more-icon:hover .tooltip {
-    opacity: 1; /* Show tooltip on icon hover */
+    .lisa-products__grid {
+        grid-template-columns: 1fr;
+    }
 }

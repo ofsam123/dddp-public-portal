@@ -1,69 +1,45 @@
-import React, { useState } from 'react'
-import { Carousel, CarouselItem, CarouselControl, CarouselIndicators } from 'reactstrap';
-import ImageCarousel1 from '../static/images/img/carousel-1.jpg'
-import ImageCarousel2 from '../static/images/img/carousel-2.jpg'
-import ImageCarousel3 from '../static/images/img/carousel-3.jpg'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { ExternalArrowIcon } from '../shared/PortalIcons'
+import HeroGeoVisual from './HeroGeoVisual'
+import './Header.css'
 
-const items = [
-    {
-        src: ImageCarousel1,
-    },
-    {
-        src: ImageCarousel2,
-    },
-    {
-        src: ImageCarousel3,
-    }
-];
+const Header = ({ exploreHref = '/explore' }) => {
+    return (
+        <section className="portal-hero" aria-labelledby="portal-hero-title">
+            <div className="portal-hero__inner">
+                <div className="portal-hero__content">
+                    <span className="portal-hero__eyebrow">
+                        <span className="portal-hero__badge-dot" aria-hidden="true" /> Public DDDP portal
+                    </span>
+                    <h1 id="portal-hero-title">
+                        Understand development across Ghana's districts.
+                    </h1>
+                    <p>
+                        Explore public development information across Ghana, from national trends to regional and district-level activity.
+                    </p>
+                    <div className="portal-hero__actions">
+                        <Link className="portal-button portal-button--primary" to={exploreHref}>
+                            Explore public information <span aria-hidden="true">-&gt;</span>
+                        </Link>
+                        <a
+                            className="portal-button portal-button--secondary"
+                            href="https://dddp.gov.gh/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Open reporting platform
+                            <span className="portal-button__icon" aria-hidden="true"><ExternalArrowIcon /></span>
+                        </a>
+                    </div>
+                </div>
 
-const Header = () => {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [animating, setAnimating] = useState(false);
-
-    const next = () => {
-        if (animating) return;
-        const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1;
-        setActiveIndex(nextIndex);
-    }
-
-    const previous = () => {
-        if (animating) return;
-        const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1;
-        setActiveIndex(nextIndex);
-    }
-
-    const goToIndex = (newIndex) => {
-        if (animating) return;
-        setActiveIndex(newIndex);
-    }
-
-    const slides = items.map((item) => {
-        return (
-            <CarouselItem
-                onExiting={() => setAnimating(true)}
-                onExited={() => setAnimating(false)}
-                key={item.src}
-                style={{ height: '50vh' }}
-            >
-                <img src={item.src} alt={item.altText} style={{ height: 500, width: '100%', objectFit: 'cover' }} />
-            </CarouselItem>
-        );
-    });
-  return (
-    <div>
-        <Carousel
-                activeIndex={activeIndex}
-                next={next}
-                previous={previous}
-                className="carousel-container"
-            >
-                <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                {slides}
-                <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-                <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-            </Carousel>
-    </div>
-  )
+                <div className="portal-hero__visual">
+                    <HeroGeoVisual />
+                </div>
+            </div>
+        </section>
+    )
 }
 
 export default Header
