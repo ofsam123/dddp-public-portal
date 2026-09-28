@@ -16,6 +16,7 @@ const {
     PublicSummaryError,
 } = require('./publicSummary')
 const { createDddpAapSummaryAdapter, createDddpPwdaProgrammesSummaryAdapter } = require('./publicDatasetAggregates')
+const { createDpatPublicService, DpatPublicError } = require('./dpatPublic')
 
 const PORT = Number(process.env.PORT || 3001)
 const BUILD_DIR = path.resolve(__dirname, '..', 'build')
@@ -361,6 +362,61 @@ const handlePublicDatasetSummary = async (dataset, requestUrl, response) => {
     }
 }
 
+let dpatService = null
+const getDpatService = () => {
+    if (!dpatService) {
+        dpatService = createDpatPublicService({
+            cms: {
+                baseURL: process.env.CMS_BASE_URL || 'https://dddpcms.aoinnovations.org/dddp/api/v1/',
+                username: process.env.CMS_USER,
+                password: process.env.CMS_PASS,
+            },
+            dhis2: {
+                baseURL: process.env.DHIS2_BASE_URL || process.env.DDDP_API_BASE_URL,
+                username: process.env.DHIS2_USER || process.env.DDDP_API_USERNAME,
+                password: process.env.DHIS2_PASS || process.env.DDDP_API_PASSWORD,
+            },
+            classificationScale: process.env.DPAT_CLASSIFICATION_SCALE || 'official',
+            publishedYears: process.env.DPAT_PUBLISHED_YEARS
+                ? process.env.DPAT_PUBLISHED_YEARS.split(',').map((year) => Number(year.trim())).filter(Number.isInteger)
+                : null,
+            maxConcurrent: Number(process.env.DPAT_UPSTREAM_CONCURRENCY || 20),
+            ttl: process.env.DPAT_SCORES_CACHE_TTL_MS ? { scores: Number(process.env.DPAT_SCORES_CACHE_TTL_MS) } : undefined,
+        })
+    }
+    return dpatService
+}
+
+const DPAT_ROUTES = [
+    [/^\/api\/public\/dpat\/years$/, (service) => service.getYears()],
+    [/^\/api\/public\/dpat\/geo\/regions$/, (service) => service.getRegions()],
+    [/^\/api\/public\/dpat\/geo\/districts$/, (service) => service.getDistricts()],
+    [/^\/api\/public\/dpat\/scores\/([^/]+)$/, (service, [year]) => service.getYearScores(year)],
+    [/^\/api\/public\/dpat\/scores\/([^/]+)\/regions$/, (service, [year]) => service.getRegionScores(year)],
+    [/^\/api\/public\/dpat\/scores\/([^/]+)\/thematic-areas$/, (service, [year]) => service.getThematicAreaScores(year)],
+    [/^\/api\/public\/dpat\/scores\/([^/]+)\/district\/([^/]+)$/, (service, [year, districtId]) => service.getDistrictScores(year, districtId)],
+    [/^\/api\/public\/dpat\/indicators\/([^/]+)$/, (service, [year]) => service.getIndicators(year)],
+]
+
+const handleDpatRequest = async (pathname, response) => {
+    const route = DPAT_ROUTES.find(([pattern]) => pattern.test(pathname))
+    if (!route) {
+        sendJson(response, 404, { error: 'Not found.' })
+        return
+    }
+    try {
+        const params = pathname.match(route[0]).slice(1).map(decodeURIComponent)
+        sendJson(response, 200, await route[1](getDpatService(), params))
+    } catch (error) {
+        if (error instanceof DpatPublicError) {
+            sendJson(response, error.statusCode, { error: error.message })
+            return
+        }
+        console.error(`DPAT public data refresh failed (${error.code || error.name || 'request-error'})`)
+        sendJson(response, 503, { error: 'DPAT results are temporarily unavailable.' })
+    }
+}
+
 const sendStaticFile = (request, requestPath, response) => {
     const requestedFile = requestPath === '/' ? 'index.html' : requestPath.replace(/^\/+/, '')
     const resolvedFile = path.resolve(BUILD_DIR, requestedFile)
@@ -450,11 +506,23 @@ const server = http.createServer(async (request, response) => {
         return
     }
 
+    if (requestUrl.pathname.startsWith('/api/public/dpat/')) {
+        await handleDpatRequest(requestUrl.pathname, response)
+        return
+    }
+
     sendStaticFile(request, requestUrl.pathname, response)
 })
 
 if (require.main === module) {
-    server.listen(PORT, () => console.log(`Public portal listening on port ${PORT}`))
+    server.listen(PORT, () => {
+        console.log(`Public portal listening on port ${PORT}`)
+        try {
+            getDpatService().warm().catch((error) => console.error(`DPAT warm-up failed (${error.code || error.name || 'request-error'})`))
+        } catch (error) {
+            console.error(`DPAT service is not configured (${error.message})`)
+        }
+    })
 }
 
 module.exports = {

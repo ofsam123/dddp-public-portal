@@ -16,7 +16,8 @@ const baseNavItems = [
 const NavBar = () => {
     const location = useLocation()
     const isExploreRoute = location.pathname.startsWith('/explore')
-    const activeHref = isExploreRoute ? '/explore' : location.pathname
+    const isDpatAnalysisRoute = location.pathname.startsWith('/dpat/performance-analysis')
+    const activeHref = isExploreRoute ? '/explore' : isDpatAnalysisRoute ? '/dpat/performance-analysis' : location.pathname
     const current = new URLSearchParams(location.search)
     const context = new URLSearchParams()
     if (/^\d{4}$/.test(current.get('year') || '')) context.set('year', current.get('year'))
@@ -28,7 +29,7 @@ const NavBar = () => {
         return item
     })
     return (
-        <div className={`pill-nav-shell ${location.pathname === '/' ? 'pill-nav-shell--home' : 'pill-nav-shell--page'}${isExploreRoute ? ' pill-nav-shell--explore' : ''}`}>
+        <div className={`pill-nav-shell ${location.pathname === '/' ? 'pill-nav-shell--home' : 'pill-nav-shell--page'}${isExploreRoute || isDpatAnalysisRoute ? ' pill-nav-shell--explore' : ''}`}>
             <PillNav items={navItems} activeHref={activeHref} baseColor="#16325A" pillColor="#ffffff" hoveredPillTextColor="#ffffff" pillTextColor="#16325A" className="dddp-pill-nav" />
         </div>
     )

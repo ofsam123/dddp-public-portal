@@ -34,6 +34,8 @@ const Seasonal = lazyRoute(() => import('./component/lisa-platform/information/S
 const Dashboard = lazyRoute(() => import('./component/lisa-platform/dashbaord/Dashboard'));
 const ClimateChange = lazyRoute(() => import('./component/lisa-platform/climate/ClimateChange'));
 const PublicRouteShell = lazyRoute(() => import('./component/public-pages/PublicRouteShell'));
+const DpatPerformancePage = lazyRoute(() => import('./component/dpat/DpatPerformancePage'));
+const DpatDistrictPage = lazyRoute(() => import('./component/dpat/DpatDistrictPage'));
 
 function App() {
   return (
@@ -71,7 +73,8 @@ function App() {
             <Route path='seasonal' element={<Seasonal />} />
             <Route path='/dashboard' element= {<Dashboard />} />
             <Route path='/dpat/assessment' element={<PublicRouteShell title="DPAT Assessment" />} />
-            <Route path='/dpat/performance-analysis' element={<PublicRouteShell title="Performance Analysis" />} />
+            <Route path='/dpat/performance-analysis' element={<DpatPerformancePage />} />
+            <Route path='/dpat/performance-analysis/districts/:districtId' element={<DpatDistrictPage />} />
             <Route path='/data-statistics/development-dimension' element={<PublicRouteShell title="Development Dimension" />} />
             <Route path='/apr/mmda' element={<PublicRouteShell title="MMDA APR" />} />
             <Route path='/apr/rcc' element={<PublicRouteShell title="RCC APR" />} />
