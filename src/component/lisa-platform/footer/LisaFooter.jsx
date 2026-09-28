@@ -2,17 +2,21 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../../static/css/style.css'
 import LisaLogo from '../../static/images/img/lisa-logo.png'
-import NewsLetter from '../newsletter/NewsLetter'
+import PortalLogo from '../../shared/PortalLogo'
 
 
 const LisaFooter = () => {
     return (
         <div className="container-fluid text-body footer mt-5 pt-5 wow fadeIn" style={{ backgroundColor: '#EFF1FE' }} data-wow-delay="0.1s">
-            {/* <NewsLetter /> */}
             <div className="container py-5">
                 <div className="row g-5" style={{ color: '#9b9b9b', textAlign: 'left' }}>
                     <div className='col-lg-3 col-md-6'>
-                        <img src={LisaLogo} alt='Lisa Log' width={150} style={{ marginBottom: '2rem' }} />
+                        <PortalLogo
+                            src={LisaLogo}
+                            alt="Local Information System for Adaptation"
+                            variant="footer"
+                            className="mb-4"
+                        />
                         <p style={{ color: '#245912' }}>We ensure better services and better quality at every product you might invest in and we shall help grow better</p>
                         <div className="d-flex pt-2">
                             <a className="btn btn-square btn-outline-light" href="#" style={{ color: '#00910E', borderRadius: '38px', marginRight: '5px', border: '1px solid #00910E', transition: '.3s' }}><i className="fab fa-twitter"></i></a>
@@ -26,7 +30,10 @@ const LisaFooter = () => {
                         <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>LED Platform</a>
                         <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>NDPC</a>
                         <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>MLGDRD</a>
-                        <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>Civil Service</a>
+                        <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>GSS</a>
+                        <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>MMDAs</a>
+                        <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>RCCs</a>
+                        <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>OHLGS</a>
                         <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>Ministry of Finance</a>
                         <a className="mb-2 btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>Ministry of Agriculture</a>
                         <a className="btn btn-link" href="#" style={{ textDecoration: 'none', color: '#245912' }}>ICT Service Providers</a>

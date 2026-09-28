@@ -7,16 +7,4 @@ const instanceDDDP = axios.create({
     }
 });
 
-instanceDDDP.interceptors.request.use(
-    config => {
-        const encodedCredentials = btoa(`msow:dpGhana@2022`);
-
-        config.headers.Authorization = `Basic ${encodedCredentials}`;
-
-        return config;
-    }, error => {
-        return Promise.reject(error);
-    }
-);
-
 export default instanceDDDP;

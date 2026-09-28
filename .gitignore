@@ -11,6 +11,7 @@
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -19,3 +20,12 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# local development logs
+dev-server-*.log
+
+# internal development / planning documents
+EXISTING_DDDP_DATA_BRIDGE_AUDIT.md
+PUBLIC_PORTAL_DISCOVERY_REPORT.md
+PUBLIC_PORTAL_REVAMP_BLUEPRINT.md
+VISUAL_MATURITY_AND_MAP_FEASIBILITY.md
