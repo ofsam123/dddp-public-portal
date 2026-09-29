@@ -366,9 +366,7 @@ const DpatPerformancePage = () => {
                 description="Official final DPAT outcomes for every Metropolitan, Municipal and District Assembly: national benchmarks, rankings, regional comparisons and indicator-level results."
                 year={year}
                 years={years.data?.years}
-                onYearChange={setYear}
-                updatedAt={scores.data?.updatedAt}
-            >
+                onYearChange={setYear}            >
                 {scores.data && insights && <OverviewKpis scores={scores.data} insights={insights} scale={scale} />}
             </DpatHero>
 

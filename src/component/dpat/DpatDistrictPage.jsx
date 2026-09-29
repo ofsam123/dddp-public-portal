@@ -278,9 +278,7 @@ const DpatDistrictPage = () => {
                     : null}
                 year={year}
                 years={years.data?.years}
-                onYearChange={setYear}
-                updatedAt={scores.data?.updatedAt}
-                badges={released ? (
+                onYearChange={setYear}                badges={released ? (
                     <>
                         <span className="dpat-pill dpat-pill--solid" style={{ '--pill-color': color }}>{data.classification}</span>
                         <span className="dpat-pill dpat-pill--light">{data.status}</span>
