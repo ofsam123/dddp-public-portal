@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { AnimatedNumber, PublicMotionItem } from '../shared/PublicMotion'
 
 const numberFormatter = new Intl.NumberFormat('en-GH')
-const percentFormatter = new Intl.NumberFormat('en-GH', { maximumFractionDigits: 2 })
+const percentFormatter = new Intl.NumberFormat('en-GH', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 
 const InsightLoading = ({ rows = 4 }) => (
     <div className="citizen-insight-loading" aria-label="Loading selected-year project insight">

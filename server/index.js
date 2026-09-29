@@ -17,6 +17,8 @@ const {
 } = require('./publicSummary')
 const { createDddpAapSummaryAdapter, createDddpPwdaProgrammesSummaryAdapter } = require('./publicDatasetAggregates')
 const { createDpatPublicService, DpatPublicError } = require('./dpatPublic')
+const { createLisaPublicService, LisaPublicError, LISA_ROUTE_PREFIX } = require('./lisaPublic')
+const { createLisaClimateService, LisaClimateError, CLIMATE_ROUTE_PREFIX } = require('./lisaClimate')
 
 const PORT = Number(process.env.PORT || 3001)
 const BUILD_DIR = path.resolve(__dirname, '..', 'build')
@@ -417,6 +419,62 @@ const handleDpatRequest = async (pathname, response) => {
     }
 }
 
+let lisaService = null
+const handleLisaRequest = async (requestUrl, response) => {
+    if (!lisaService) lisaService = createLisaPublicService({ baseURL: process.env.LISA_BASE_URL || undefined })
+    try {
+        sendJson(response, 200, await lisaService.get(requestUrl))
+    } catch (error) {
+        if (error instanceof LisaPublicError) {
+            sendJson(response, error.statusCode, { error: error.message })
+            return
+        }
+        console.error(`LISA public data refresh failed (${error.code || error.name || 'request-error'})`)
+        sendJson(response, 503, { error: 'Climate information is temporarily unavailable.' })
+    }
+}
+
+let climateService = null
+const getClimateService = () => {
+    if (!climateService) {
+        climateService = createLisaClimateService({
+            baseURL: process.env.DHIS2_BASE_URL || process.env.DDDP_API_BASE_URL,
+            username: process.env.DHIS2_USER || process.env.DDDP_API_USERNAME,
+            password: process.env.DHIS2_PASS || process.env.DDDP_API_PASSWORD,
+            ttlMs: process.env.CLIMATE_CACHE_TTL_MS ? Number(process.env.CLIMATE_CACHE_TTL_MS) : undefined,
+        })
+    }
+    return climateService
+}
+
+const handleClimateRequest = async (pathname, response) => {
+    try {
+        if (pathname === `${CLIMATE_ROUTE_PREFIX}/overview`) {
+            sendJson(response, 200, await getClimateService().getOverview())
+            return
+        }
+        const photoMatch = pathname.match(new RegExp(`^${CLIMATE_ROUTE_PREFIX}/photos/([A-Za-z0-9]{11})/([A-Za-z0-9]{11})$`))
+        if (photoMatch) {
+            const photo = await getClimateService().getPhoto(photoMatch[1], photoMatch[2])
+            response.writeHead(200, {
+                'Cache-Control': 'public, max-age=86400',
+                'Content-Type': photo.contentType,
+                'X-Content-Type-Options': 'nosniff',
+            })
+            response.end(photo.body)
+            return
+        }
+        sendJson(response, 404, { error: 'Not found.' })
+    } catch (error) {
+        if (error instanceof LisaClimateError) {
+            sendJson(response, error.statusCode, { error: error.message })
+            return
+        }
+        console.error(`Climate records refresh failed (${error.code || error.name || 'request-error'})`)
+        sendJson(response, 503, { error: 'Climate records are temporarily unavailable.' })
+    }
+}
+
 const sendStaticFile = (request, requestPath, response) => {
     const requestedFile = requestPath === '/' ? 'index.html' : requestPath.replace(/^\/+/, '')
     const resolvedFile = path.resolve(BUILD_DIR, requestedFile)
@@ -508,6 +566,16 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname.startsWith('/api/public/dpat/')) {
         await handleDpatRequest(requestUrl.pathname, response)
+        return
+    }
+
+    if (requestUrl.pathname.startsWith(`${LISA_ROUTE_PREFIX}/`)) {
+        await handleLisaRequest(requestUrl, response)
+        return
+    }
+
+    if (requestUrl.pathname.startsWith(`${CLIMATE_ROUTE_PREFIX}/`)) {
+        await handleClimateRequest(requestUrl.pathname, response)
         return
     }
 

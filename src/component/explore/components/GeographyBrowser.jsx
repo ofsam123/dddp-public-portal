@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useRegionalSummaries from '../hooks/useRegionalSummaries'
 import { PROJECT_PROGRAMME_VIEWS } from '../hooks/useProjectProgrammeView'
@@ -7,6 +7,58 @@ import PublicState from './PublicState'
 import RegionalActivityRanking from './RegionalActivityRanking'
 
 const numberFormatter = new Intl.NumberFormat('en-GH')
+
+const assemblyType = (name = '') => {
+    if (/metropolitan/i.test(name)) return 'Metropolitan'
+    if (/municipal/i.test(name)) return 'Municipal'
+    return 'District'
+}
+
+const DistrictDirectory = ({ region, districts, withYear }) => {
+    const [query, setQuery] = useState('')
+    const sorted = useMemo(() => [...districts].sort((a, b) => a.name.localeCompare(b.name)), [districts])
+    const needle = query.trim().toLowerCase()
+    const visible = needle ? sorted.filter((district) => district.name.toLowerCase().includes(needle)) : sorted
+
+    return (
+        <div className="geography-browser__districts">
+            <div className="district-directory__aside">
+                <h3>Find a district</h3>
+                <p>Choose a District / MMDA in {region.name} to explore its local public information.</p>
+                {districts.length > 0 && (
+                    <>
+                        <label className="district-directory__search">
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" /><path d="m17 17-3.5-3.5" /></svg>
+                            <input
+                                type="search"
+                                value={query}
+                                onChange={(event) => setQuery(event.target.value)}
+                                placeholder="Filter districts"
+                                aria-label={`Filter districts in ${region.name}`}
+                            />
+                        </label>
+                        <small className="district-directory__count" aria-live="polite">
+                            {needle ? `${visible.length} of ${districts.length} districts` : `${districts.length} districts`}
+                        </small>
+                    </>
+                )}
+            </div>
+            {districts.length === 0 ? (
+                <div className="geography-browser__empty">District links for this region are not available yet.</div>
+            ) : visible.length === 0 ? (
+                <div className="geography-browser__empty">No district in {region.name} matches “{query.trim()}”.</div>
+            ) : (
+                <div className="geography-browser__grid geography-browser__grid--districts">
+                    {visible.map((district) => (
+                        <Link className="geography-card geography-card--district" to={withYear(`/explore/regions/${region.slug}/districts/${district.slug}`)} key={district.id}>
+                            <span data-type={assemblyType(district.name).toLowerCase()}>{assemblyType(district.name)}</span><strong>{district.name}</strong>
+                        </Link>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
 const GeographyBrowser = ({
     title, description, regions = [], districts = [], activeRegion, year,
@@ -68,7 +120,7 @@ const GeographyBrowser = ({
                                     <span className="region-index__meta">
                                         {Number.isInteger(summariesBySlug.get(region.slug)?.kpis?.[indicatorKey])
                                             ? `${numberFormatter.format(summariesBySlug.get(region.slug).kpis[indicatorKey])} ${indicator.label.toLowerCase()}`
-                                            : Number.isInteger(region.districtCount) ? `${region.districtCount} districts` : '->'}
+                                            : Number.isInteger(region.districtCount) ? `${region.districtCount} districts` : 'View region'}
                                     </span>
                                 </Link>
                             ))}
@@ -86,20 +138,7 @@ const GeographyBrowser = ({
                 </PublicState>
             )}
 
-            {activeRegion && (
-                <div className="geography-browser__districts">
-                    <div><h3>Districts in {activeRegion.name}</h3><p>Choose a district to explore local public information.</p></div>
-                    {districts.length > 0 ? (
-                        <div className="geography-browser__grid geography-browser__grid--districts">
-                            {districts.map((district) => (
-                                <Link className="geography-card geography-card--district" to={withYear(`/explore/regions/${activeRegion.slug}/districts/${district.slug}`)} key={district.id}>
-                                    <span>District / MMDA</span><strong>{district.name}</strong><small>{activeRegion.name}</small>
-                                </Link>
-                            ))}
-                        </div>
-                    ) : <div className="geography-browser__empty">District links for this region are not available yet.</div>}
-                </div>
-            )}
+            {activeRegion && <DistrictDirectory region={activeRegion} districts={districts} withYear={withYear} />}
         </section>
     )
 }

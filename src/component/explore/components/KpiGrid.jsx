@@ -24,7 +24,10 @@ const KpiGrid = ({ items = [], context, comparisons, isLoading = false }) => {
                     {retrievedAt && <span>Retrieved {retrievedAt}</span>}
                 </div>
             )}
-            <div className={`explore-kpi-band explore-kpi-band--${Math.min(items.length, 4)}`} aria-label="Public KPI summary">
+            <div
+                className={`explore-kpi-band explore-kpi-band--${Math.min(items.length, 4)}${comparisons ? '' : ' explore-kpi-band--compact'}`}
+                aria-label="Public KPI summary"
+            >
                 {items.map((item) => (
                     <article className="explore-kpi-item" key={item.id || item.label}>
                         {item.status === 'available' ? (

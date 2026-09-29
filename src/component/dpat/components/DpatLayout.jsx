@@ -6,6 +6,7 @@ import PublicState from '../../explore/components/PublicState'
 import DpatGlobalSearch from './DpatGlobalSearch'
 import '../Dpat.css'
 
+const WORLD_LINES_URL = `${process.env.PUBLIC_URL}/images/world-lines.svg`
 const FONT_HREF = 'https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap'
 
 const useDpatFonts = () => {
@@ -71,6 +72,7 @@ const YearPicker = ({ year, years, onYearChange }) => {
 export const DpatHero = ({ breadcrumbs, eyebrow, title, description, year, years = [], onYearChange, badges, children }) => {
     return (
         <header className={`dpat-hero${children ? ' dpat-hero--overlap' : ''}`}>
+            <div className="dpat-hero__world" aria-hidden="true" style={{ backgroundImage: `url(${WORLD_LINES_URL})` }} />
             <div className="dpat-container">
                 <div className="dpat-hero__top">
                     <ExploreBreadcrumbs items={breadcrumbs} />

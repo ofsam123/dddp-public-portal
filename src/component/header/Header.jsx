@@ -1,42 +1,66 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ExternalArrowIcon } from '../shared/PortalIcons'
 import HeroGeoVisual from './HeroGeoVisual'
+import HeroBackdrop from '../shared/HeroBackdrop'
 import './Header.css'
 
-const Header = ({ exploreHref = '/explore' }) => {
+const numberFormatter = new Intl.NumberFormat('en-GH')
+
+const formatCount = (value, isLoading) => (Number.isInteger(value) ? numberFormatter.format(value) : isLoading ? '…' : '—')
+
+const Header = ({
+    exploreHref = '/explore',
+    year,
+    summaryData,
+    geographyData,
+    isLoading,
+    summariesBySlug,
+    isRegionalLoading,
+    withYear,
+}) => {
+    const regions = geographyData?.meta?.regionCount
+    const districts = geographyData?.meta?.districtCount
+    const activity = summaryData?.kpis?.projectsProgrammesTotal
+    const meetings = summaryData?.kpis?.meetings
+
     return (
-        <section className="portal-hero" aria-labelledby="portal-hero-title">
-            <div className="portal-hero__inner">
-                <div className="portal-hero__content">
-                    <span className="portal-hero__eyebrow">
-                        <span className="portal-hero__badge-dot" aria-hidden="true" /> Public DDDP portal
-                    </span>
-                    <h1 id="portal-hero-title">
-                        Understand development across Ghana's districts.
+        <section className="home-hero" aria-labelledby="home-hero-title">
+            <HeroBackdrop />
+            <div className="home-hero__inner pt-container">
+                <div className="home-hero__content">
+                    <span className="pt-eyebrow"><i aria-hidden="true" /> Public portal · Republic of Ghana</span>
+                    <h1 id="home-hero-title">
+                        Development data for <span>every district</span> in Ghana
                     </h1>
                     <p>
-                        Explore public development information across Ghana, from national trends to regional and district-level activity.
+                        See what is being planned, delivered and assessed across Ghana's regions and districts, from national totals to local detail, in one open portal.
                     </p>
-                    <div className="portal-hero__actions">
-                        <Link className="portal-button portal-button--primary" to={exploreHref}>
-                            Explore public information <span aria-hidden="true">-&gt;</span>
+                    <div className="home-hero__actions">
+                        <Link className="pt-button pt-button--primary" to={exploreHref}>
+                            Explore the data
+                            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
                         </Link>
-                        <a
-                            className="portal-button portal-button--secondary"
-                            href="https://dddp.gov.gh/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Open reporting platform
-                            <span className="portal-button__icon" aria-hidden="true"><ExternalArrowIcon /></span>
-                        </a>
+                        <Link className="pt-button pt-button--secondary" to="/dpat/performance-analysis">
+                            See DPAT results
+                        </Link>
                     </div>
+
+                    <dl className="home-hero__stats">
+                        <div><dt>Regions</dt><dd>{formatCount(regions, isLoading)}</dd></div>
+                        <div><dt>Districts / MMDAs</dt><dd>{formatCount(districts, isLoading)}</dd></div>
+                        <div><dt>Latest data</dt><dd>{year || '—'}</dd></div>
+                    </dl>
                 </div>
 
-                <div className="portal-hero__visual">
-                    <HeroGeoVisual />
-                </div>
+                <HeroGeoVisual
+                    activity={formatCount(activity, isLoading)}
+                    meetings={formatCount(meetings, isLoading)}
+                    year={year}
+                    regions={geographyData?.regions}
+                    summariesBySlug={summariesBySlug}
+                    isRegionalLoading={isRegionalLoading}
+                    withYear={withYear}
+                />
             </div>
         </section>
     )

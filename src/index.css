@@ -2,16 +2,16 @@ body {
   margin: 0;
   --color-primary: #16325A;
   --color-primary-hover: #0D1F3A;
-  --color-background: #f5f8fb;
+  --color-background: #f6f8fb;
   --color-surface: #ffffff;
-  --color-surface-muted: #eef3f7;
-  --color-text: #142033;
-  --color-text-muted: #5f6f82;
-  --color-border: #d9e3ec;
+  --color-surface-muted: #f1f4f8;
+  --color-text: #0f1b2d;
+  --color-text-muted: #5b6b80;
+  --color-border: #e3e8ef;
   --color-focus: #16325A;
   --color-climate: #1f8f5f;
-  --color-climate-soft: #e8f7ef;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --color-climate-soft: #e8f5ee;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -24,7 +24,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Manrope', 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 button,

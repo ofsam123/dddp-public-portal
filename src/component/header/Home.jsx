@@ -4,15 +4,17 @@ import Platform from '../platform/Platform'
 import HomeUpdates from '../updates/HomeUpdates'
 import PublicFooter from '../footer/PublicFooter'
 import Header from './Header'
-import { LisaClimateSection, ReportsResourcesSection } from '../home-sections/HomePhaseOneSections'
+import HomeGateways from '../home-sections/HomeGateways'
+import HomeDpatHighlight from '../home-sections/HomeDpatHighlight'
+import { ClimateResourcesSection } from '../home-sections/HomePhaseOneSections'
 import ExploreGeographyEntry from '../home-sections/ExploreGeographyEntry'
 import NationalDataVisualizations from '../home-sections/NationalDataVisualizations'
 import useNationalBreakdowns from '../explore/hooks/useNationalBreakdowns'
 import usePublicGeography from '../explore/hooks/usePublicGeography'
 import usePublicSummary from '../explore/hooks/usePublicSummary'
 import usePublicYear from '../explore/hooks/usePublicYear'
+import useRegionalSummaries from '../explore/hooks/useRegionalSummaries'
 import { getNationalGeography } from '../explore/services/publicDataService'
-
 
 const Home = () => {
     const publicYear = usePublicYear()
@@ -25,11 +27,22 @@ const Home = () => {
         year: publicYear.year,
         isYearLoading: publicYear.isLoading,
     })
+    const { summariesBySlug, isLoading: isRegionalLoading } = useRegionalSummaries({ year: publicYear.year })
 
     return (
-        <div id="top">
+        <div id="top" className="portal-page">
             <NavBar />
-            <Header exploreHref={publicYear.withYear('/explore')} />
+            <Header
+                exploreHref={publicYear.withYear('/explore')}
+                year={publicYear.year}
+                summaryData={summaryData}
+                geographyData={geographyData}
+                isLoading={isSummaryLoading || isGeographyLoading}
+                summariesBySlug={summariesBySlug}
+                isRegionalLoading={isRegionalLoading || publicYear.isLoading}
+                withYear={publicYear.withYear}
+            />
+            <HomeGateways withYear={publicYear.withYear} />
             <Platform
                 geographyData={geographyData}
                 isGeographyLoading={isGeographyLoading}
@@ -37,6 +50,7 @@ const Home = () => {
                 publicYear={publicYear}
                 summaryData={summaryData}
             />
+            <HomeDpatHighlight />
             <NationalDataVisualizations
                 breakdownsData={breakdownsData}
                 isLoading={isBreakdownsLoading}
@@ -47,16 +61,9 @@ const Home = () => {
                 isLoading={isGeographyLoading}
                 withYear={publicYear.withYear}
             />
-            <LisaClimateSection />
-            <ReportsResourcesSection />
+            <ClimateResourcesSection />
             <HomeUpdates />
             <PublicFooter withYear={publicYear.withYear} />
-            {/* <About /> */}
-            {/* <Services /> */}
-            {/* <WhyChooseUs />
-            <Projects />
-            <FreeQuote /> */}
-            {/* <Footer /> */}
         </div>
     )
 }

@@ -1,0 +1,87 @@
+.home-gateways__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.home-gateway {
+    --tone: var(--pt-navy);
+    --tone-soft: var(--pt-navy-050);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 26px;
+    overflow: hidden;
+    border: 1px solid var(--pt-line);
+    border-radius: var(--pt-radius-lg);
+    color: var(--pt-ink);
+    background: var(--pt-surface);
+    box-shadow: var(--pt-shadow-xs);
+    text-decoration: none;
+    transition: border-color 200ms ease, box-shadow 240ms ease, transform 240ms var(--pt-ease);
+}
+
+.home-gateway::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: var(--tone);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 320ms var(--pt-ease);
+}
+
+.home-gateway:hover {
+    border-color: color-mix(in srgb, var(--tone) 28%, white);
+    color: var(--pt-ink);
+    box-shadow: var(--pt-shadow);
+    text-decoration: none;
+    transform: translateY(-3px);
+}
+
+.home-gateway:hover::before { transform: scaleX(1); }
+.home-gateway.is-gold { --tone: #a47c25; --tone-soft: var(--pt-gold-soft); }
+.home-gateway.is-green { --tone: var(--pt-green); --tone-soft: var(--pt-green-soft); }
+.home-gateway.is-slate { --tone: #475569; --tone-soft: #eef1f5; }
+
+.home-gateway__icon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 14px;
+    color: var(--tone);
+    background: var(--tone-soft);
+}
+
+.home-gateway__icon svg,
+.home-gateway__cta svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.home-gateway__icon svg { width: 24px; height: 24px; }
+
+.home-gateway h3 { margin: 22px 0 8px; color: var(--pt-ink); font-size: 1.12rem; font-weight: 800; letter-spacing: -0.01em; }
+.home-gateway p { flex: 1; margin: 0; color: var(--pt-muted); font-size: 0.92rem; line-height: 1.65; }
+
+.home-gateway__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 22px;
+    color: var(--tone);
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: gap 200ms var(--pt-ease);
+}
+
+.home-gateway__cta svg { width: 15px; height: 15px; }
+.home-gateway:hover .home-gateway__cta { gap: 12px; }
+
+@media (max-width: 1080px) {
+    .home-gateways__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+    .home-gateways__grid { grid-template-columns: 1fr; gap: 12px; }
+    .home-gateway { padding: 22px; }
+}
