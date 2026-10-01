@@ -648,9 +648,13 @@ const server = http.createServer(async (request, response) => {
     sendStaticFile(request, requestUrl.pathname, response)
 })
 
-if (require.main === module) {
-    server.listen(PORT, () => {
-        console.log(`Public portal listening on port ${PORT}`)
+const start = (port = PORT) => {
+    if (server.listening) return server
+    if (!fs.existsSync(path.join(BUILD_DIR, 'index.html'))) {
+        console.warn(`No production build found at ${BUILD_DIR}; run "npm run build" so the site pages can be served.`)
+    }
+    server.listen(port, () => {
+        console.log(`Public portal listening on port ${port}`)
         try {
             getDpatService().warm().catch((error) => console.error(`DPAT warm-up failed (${error.code || error.name || 'request-error'})`))
         } catch (error) {
@@ -660,9 +664,13 @@ if (require.main === module) {
             .then(({ latestYear }) => getDeliveryLoader().warm(latestYear))
             .catch((error) => console.error(`Delivery warm-up failed (${error.code || error.name || 'request-error'})`))
     })
+    return server
 }
 
+if (require.main === module) start()
+
 module.exports = {
+    start,
     handlePublicAvailableYears,
     handlePublicGeography,
     handlePublicActivitySeries,

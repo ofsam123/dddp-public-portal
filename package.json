@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "serve": "node server/index.js",
+    "serve": "node app.js",
     "build": "react-scripts build",
     "test:bridge": "node --test server/*.test.js",
     "test": "react-scripts test",
@@ -62,7 +62,7 @@
     ]
   },
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "keywords": [],
   "author": "",
   "license": "ISC"
