@@ -64,7 +64,7 @@ const RegionalActivityRanking = ({
                                         style={{ width: `${maximum > 0 ? (value / maximum) * 100 : 0}%` }}
                                     />
                                 </span>
-                                <b>{numberFormatter.format(value)}</b>
+                                <b>{(indicator.format || numberFormatter.format)(value)}</b>
                                 <small>{share === null ? 'Share unavailable' : `${percentFormatter.format(share)}% of Ghana`}</small>
                             </li>
                         )

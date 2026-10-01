@@ -42,13 +42,6 @@ export const ordinal = (value) => {
     return `${value}${suffix}`
 }
 
-export const formatDateTime = (value) => {
-    if (!value) return null
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return null
-    return new Intl.DateTimeFormat('en-GH', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
-}
-
 export const median = (values) => {
     const sorted = values.filter(Number.isFinite).sort((a, b) => a - b)
     if (sorted.length === 0) return null

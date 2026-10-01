@@ -3,10 +3,10 @@ import NavBar from '../../header/NavBar'
 import PublicFooter from '../../footer/PublicFooter'
 import ExploreBreadcrumbs from '../../explore/components/ExploreBreadcrumbs'
 import PublicState from '../../explore/components/PublicState'
-import { formatDateTime } from '../dpatFormat'
 import DpatGlobalSearch from './DpatGlobalSearch'
 import '../Dpat.css'
 
+const WORLD_LINES_URL = `${process.env.PUBLIC_URL}/images/world-lines.svg`
 const FONT_HREF = 'https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap'
 
 const useDpatFonts = () => {
@@ -69,10 +69,10 @@ const YearPicker = ({ year, years, onYearChange }) => {
     )
 }
 
-export const DpatHero = ({ breadcrumbs, eyebrow, title, description, year, years = [], onYearChange, updatedAt, badges, children }) => {
-    const updated = formatDateTime(updatedAt)
+export const DpatHero = ({ breadcrumbs, eyebrow, title, description, year, years = [], onYearChange, badges, children }) => {
     return (
         <header className={`dpat-hero${children ? ' dpat-hero--overlap' : ''}`}>
+            <div className="dpat-hero__world" aria-hidden="true" style={{ backgroundImage: `url(${WORLD_LINES_URL})` }} />
             <div className="dpat-container">
                 <div className="dpat-hero__top">
                     <ExploreBreadcrumbs items={breadcrumbs} />
@@ -81,7 +81,6 @@ export const DpatHero = ({ breadcrumbs, eyebrow, title, description, year, years
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6l7-3Z" /><path d="M9 12l2 2 4-4" /></svg>
                             Official final results
                         </span>
-                        {updated && <span>Updated {updated}</span>}
                     </div>
                 </div>
                 <div className="dpat-hero__grid">

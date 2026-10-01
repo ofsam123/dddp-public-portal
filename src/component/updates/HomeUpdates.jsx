@@ -34,14 +34,15 @@ const HomeUpdates = () => {
     const [featuredUpdate, ...supportingUpdates] = updates
 
     return (
-        <PublicMotionSection className="updates-section" aria-labelledby="updates-title">
-            <div className="updates-section__inner">
-                <PublicMotionItem className="updates-section__heading">
+        <PublicMotionSection className="pt-section updates-section" aria-labelledby="updates-title">
+            <div className="pt-container">
+                <PublicMotionItem className="pt-section-head">
                     <div>
-                        <span className="section-kicker">Latest stories</span>
-                        <h2 id="updates-title">Updates from the field.</h2>
+                        <span className="section-kicker">Events</span>
+                        <h2 id="updates-title">Events</h2>
+                        <p>Training, capacity building and data use events across Ghana's assemblies.</p>
                     </div>
-                    <Link to="/updates">View all updates <span aria-hidden="true">-&gt;</span></Link>
+                    <Link className="pt-link" to="/updates">View all events <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></Link>
                 </PublicMotionItem>
 
                 <PublicMotionItem className="updates-editorial">
@@ -53,7 +54,7 @@ const HomeUpdates = () => {
                         <div className="update-card__content">
                             <h3><Link to={featuredUpdate.href}>{featuredUpdate.title}</Link></h3>
                             <p>{featuredUpdate.description}</p>
-                            <Link className="update-card__link" to={featuredUpdate.href}>Read story <span aria-hidden="true">-&gt;</span></Link>
+                            <Link className="pt-link update-card__link" to={featuredUpdate.href}>Read the story <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></Link>
                         </div>
                     </article>
 
@@ -67,6 +68,9 @@ const HomeUpdates = () => {
                                     <span>{update.category}</span>
                                     <h3><Link to={update.href}>{update.title}</Link></h3>
                                     <p>{update.description}</p>
+                                    <Link className="pt-link update-row__link" to={update.href}>
+                                        Read the story <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+                                    </Link>
                                 </div>
                             </article>
                         ))}

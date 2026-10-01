@@ -16,7 +16,11 @@ const {
     PublicSummaryError,
 } = require('./publicSummary')
 const { createDddpAapSummaryAdapter, createDddpPwdaProgrammesSummaryAdapter } = require('./publicDatasetAggregates')
+const { createDeliveryLoader } = require('./publicDelivery')
+const { createSchoolProfileLoader } = require('./publicSchools')
 const { createDpatPublicService, DpatPublicError } = require('./dpatPublic')
+const { createLisaPublicService, LisaPublicError, LISA_ROUTE_PREFIX } = require('./lisaPublic')
+const { createLisaClimateService, LisaClimateError, CLIMATE_ROUTE_PREFIX } = require('./lisaClimate')
 
 const PORT = Number(process.env.PORT || 3001)
 const BUILD_DIR = path.resolve(__dirname, '..', 'build')
@@ -362,6 +366,52 @@ const handlePublicDatasetSummary = async (dataset, requestUrl, response) => {
     }
 }
 
+let deliveryLoader = null
+const getDeliveryLoader = () => {
+    if (!deliveryLoader) {
+        deliveryLoader = createDeliveryLoader({
+            baseURL: process.env.DDDP_API_BASE_URL,
+            username: process.env.DDDP_API_USERNAME,
+            password: process.env.DDDP_API_PASSWORD,
+            loadGeographyContext,
+            ttlMs: CACHE_TTL_MS,
+        })
+    }
+    return deliveryLoader
+}
+
+let schoolProfileLoader = null
+const getSchoolProfileLoader = () => {
+    if (!schoolProfileLoader) {
+        schoolProfileLoader = createSchoolProfileLoader({
+            baseURL: process.env.DDDP_API_BASE_URL,
+            username: process.env.DDDP_API_USERNAME,
+            password: process.env.DDDP_API_PASSWORD,
+            loadGeographyContext,
+        })
+    }
+    return schoolProfileLoader
+}
+
+const scopeInput = (requestUrl) => ({
+    year: requestUrl.searchParams.get('year'),
+    regionSlug: requestUrl.searchParams.get('regionSlug') || undefined,
+    districtSlug: requestUrl.searchParams.get('districtSlug') || undefined,
+})
+
+const handlePublicAggregate = async (label, load, response) => {
+    try {
+        sendJson(response, 200, await load())
+    } catch (error) {
+        if (error instanceof PublicSummaryError) {
+            sendJson(response, error.statusCode, { error: error.message })
+            return
+        }
+        console.error(`Public ${label} refresh failed (${error.code || error.name || 'request-error'})`)
+        sendJson(response, 503, { error: `Public ${label} data is temporarily unavailable.` })
+    }
+}
+
 let dpatService = null
 const getDpatService = () => {
     if (!dpatService) {
@@ -414,6 +464,62 @@ const handleDpatRequest = async (pathname, response) => {
         }
         console.error(`DPAT public data refresh failed (${error.code || error.name || 'request-error'})`)
         sendJson(response, 503, { error: 'DPAT results are temporarily unavailable.' })
+    }
+}
+
+let lisaService = null
+const handleLisaRequest = async (requestUrl, response) => {
+    if (!lisaService) lisaService = createLisaPublicService({ baseURL: process.env.LISA_BASE_URL || undefined })
+    try {
+        sendJson(response, 200, await lisaService.get(requestUrl))
+    } catch (error) {
+        if (error instanceof LisaPublicError) {
+            sendJson(response, error.statusCode, { error: error.message })
+            return
+        }
+        console.error(`LISA public data refresh failed (${error.code || error.name || 'request-error'})`)
+        sendJson(response, 503, { error: 'Climate information is temporarily unavailable.' })
+    }
+}
+
+let climateService = null
+const getClimateService = () => {
+    if (!climateService) {
+        climateService = createLisaClimateService({
+            baseURL: process.env.DHIS2_BASE_URL || process.env.DDDP_API_BASE_URL,
+            username: process.env.DHIS2_USER || process.env.DDDP_API_USERNAME,
+            password: process.env.DHIS2_PASS || process.env.DDDP_API_PASSWORD,
+            ttlMs: process.env.CLIMATE_CACHE_TTL_MS ? Number(process.env.CLIMATE_CACHE_TTL_MS) : undefined,
+        })
+    }
+    return climateService
+}
+
+const handleClimateRequest = async (pathname, response) => {
+    try {
+        if (pathname === `${CLIMATE_ROUTE_PREFIX}/overview`) {
+            sendJson(response, 200, await getClimateService().getOverview())
+            return
+        }
+        const photoMatch = pathname.match(new RegExp(`^${CLIMATE_ROUTE_PREFIX}/photos/([A-Za-z0-9]{11})/([A-Za-z0-9]{11})$`))
+        if (photoMatch) {
+            const photo = await getClimateService().getPhoto(photoMatch[1], photoMatch[2])
+            response.writeHead(200, {
+                'Cache-Control': 'public, max-age=86400',
+                'Content-Type': photo.contentType,
+                'X-Content-Type-Options': 'nosniff',
+            })
+            response.end(photo.body)
+            return
+        }
+        sendJson(response, 404, { error: 'Not found.' })
+    } catch (error) {
+        if (error instanceof LisaClimateError) {
+            sendJson(response, error.statusCode, { error: error.message })
+            return
+        }
+        console.error(`Climate records refresh failed (${error.code || error.name || 'request-error'})`)
+        sendJson(response, 503, { error: 'Climate records are temporarily unavailable.' })
     }
 }
 
@@ -501,6 +607,24 @@ const server = http.createServer(async (request, response) => {
         return
     }
 
+    if (request.method === 'GET' && requestUrl.pathname === '/api/public/delivery') {
+        await handlePublicAggregate('delivery', () => getDeliveryLoader().getSummary(scopeInput(requestUrl)), response)
+        return
+    }
+
+    if (request.method === 'GET' && requestUrl.pathname === '/api/public/delivery-series') {
+        await handlePublicAggregate('delivery series', () => getDeliveryLoader().getSeries({
+            from: requestUrl.searchParams.get('from'),
+            to: requestUrl.searchParams.get('to'),
+        }), response)
+        return
+    }
+
+    if (request.method === 'GET' && requestUrl.pathname === '/api/public/schools') {
+        await handlePublicAggregate('school profile', () => getSchoolProfileLoader().getSummary(scopeInput(requestUrl)), response)
+        return
+    }
+
     if (request.method !== 'GET' && request.method !== 'HEAD') {
         sendJson(response, 405, { error: 'Method not allowed.' })
         return
@@ -511,21 +635,42 @@ const server = http.createServer(async (request, response) => {
         return
     }
 
+    if (requestUrl.pathname.startsWith(`${LISA_ROUTE_PREFIX}/`)) {
+        await handleLisaRequest(requestUrl, response)
+        return
+    }
+
+    if (requestUrl.pathname.startsWith(`${CLIMATE_ROUTE_PREFIX}/`)) {
+        await handleClimateRequest(requestUrl.pathname, response)
+        return
+    }
+
     sendStaticFile(request, requestUrl.pathname, response)
 })
 
-if (require.main === module) {
-    server.listen(PORT, () => {
-        console.log(`Public portal listening on port ${PORT}`)
+const start = (port = PORT) => {
+    if (server.listening) return server
+    if (!fs.existsSync(path.join(BUILD_DIR, 'index.html'))) {
+        console.warn(`No production build found at ${BUILD_DIR}; run "npm run build" so the site pages can be served.`)
+    }
+    server.listen(port, () => {
+        console.log(`Public portal listening on port ${port}`)
         try {
             getDpatService().warm().catch((error) => console.error(`DPAT warm-up failed (${error.code || error.name || 'request-error'})`))
         } catch (error) {
             console.error(`DPAT service is not configured (${error.message})`)
         }
+        loadAvailableYears()
+            .then(({ latestYear }) => getDeliveryLoader().warm(latestYear))
+            .catch((error) => console.error(`Delivery warm-up failed (${error.code || error.name || 'request-error'})`))
     })
+    return server
 }
 
+if (require.main === module) start()
+
 module.exports = {
+    start,
     handlePublicAvailableYears,
     handlePublicGeography,
     handlePublicActivitySeries,

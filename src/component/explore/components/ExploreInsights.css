@@ -1,0 +1,218 @@
+.explore-insights__placeholder {
+    margin: 0;
+    padding: 48px 0;
+    color: var(--pt-muted);
+    font-weight: 600;
+    text-align: center;
+}
+
+.explore-chart-card {
+    position: relative;
+    min-width: 0;
+    padding: 24px;
+    border: 1px solid var(--pt-line);
+    border-radius: var(--pt-radius-lg);
+    background: var(--pt-surface);
+    box-shadow: var(--pt-shadow-sm);
+}
+
+.explore-chart-card__title {
+    margin: 0 0 12px;
+    color: var(--pt-ink);
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.explore-insights .explore-insights__split + .explore-insights__split { margin-top: 20px; }
+
+/* KPI trend cards */
+.explore-trend-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.explore-trend-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: 20px 22px;
+    border: 1px solid var(--pt-line);
+    border-top: 3px solid var(--accent);
+    border-radius: var(--pt-radius);
+    background: var(--pt-surface);
+    box-shadow: var(--pt-shadow-sm);
+}
+
+.explore-trend-card__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--pt-muted);
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.explore-trend-card__label i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+.explore-trend-card strong {
+    color: var(--pt-ink);
+    font-size: clamp(1.7rem, 2.4vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.explore-trend-card__change { color: var(--pt-muted); font-size: 0.8rem; }
+.explore-trend-card__change b { font-weight: 800; }
+.explore-trend-card__change.is-up b { color: var(--pt-green); }
+.explore-trend-card__change.is-down b { color: #b4493f; }
+.explore-trend-card__spark { max-width: 240px; margin-top: 8px; }
+.explore-trend-card__note { color: var(--pt-faint); font-size: 0.76rem; font-weight: 600; }
+
+/* Split layouts */
+.explore-insights__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    align-items: start;
+    gap: 20px;
+}
+
+.explore-insights__split--wide { grid-template-columns: minmax(0, 1fr) 320px; }
+
+.explore-insights__facts { display: grid; gap: 14px; }
+
+.explore-insights__facts > div {
+    padding: 18px 20px;
+    border: 1px solid var(--pt-line);
+    border-radius: var(--pt-radius);
+    background: var(--pt-surface);
+    box-shadow: var(--pt-shadow-xs);
+}
+
+.explore-insights__facts span { color: var(--pt-muted); font-size: 0.8rem; font-weight: 700; }
+
+.explore-insights__facts strong {
+    display: block;
+    margin: 4px 0 2px;
+    color: var(--pt-navy);
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+}
+
+.explore-insights__facts p { margin: 0; color: var(--pt-muted); font-size: 0.84rem; line-height: 1.5; }
+
+/* Leaders */
+.explore-leaders h3 { margin: 0 0 6px; color: var(--pt-ink); font-size: 1.05rem; font-weight: 800; }
+.explore-leaders > p { margin: 0 0 14px; color: var(--pt-muted); font-size: 0.86rem; line-height: 1.55; }
+.explore-leaders ol { display: grid; gap: 4px; margin: 0 0 16px; padding: 0; list-style: none; }
+
+.explore-leaders ol a {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 4px 10px;
+    padding: 10px 8px;
+    border-radius: var(--pt-radius-sm);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 160ms ease;
+}
+
+.explore-leaders ol a:hover,
+.explore-leaders ol a:focus-visible { color: inherit; background: var(--pt-navy-050); }
+
+.explore-leaders__rank {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 8px;
+    color: var(--pt-navy);
+    background: var(--pt-navy-050);
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+
+.explore-leaders__name { overflow: hidden; color: var(--pt-ink); font-size: 0.9rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.explore-leaders ol a b { color: var(--pt-ink); font-size: 0.88rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.explore-leaders__bar {
+    grid-column: 2 / -1;
+    height: 5px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--pt-line-soft);
+}
+
+.explore-leaders__bar i { display: block; height: 100%; border-radius: inherit; background: var(--pt-navy); }
+.explore-leaders .pt-link { font-size: 0.88rem; }
+
+/* Next links */
+.explore-next {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.explore-next__card {
+    position: relative;
+    display: grid;
+    gap: 6px;
+    padding: 22px 60px 22px 22px;
+    border: 1px solid var(--pt-line);
+    border-radius: var(--pt-radius);
+    color: inherit;
+    background: var(--pt-surface);
+    box-shadow: var(--pt-shadow-xs);
+    text-decoration: none;
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.explore-next__card:hover,
+.explore-next__card:focus-visible {
+    border-color: var(--pt-navy-100);
+    color: inherit;
+    box-shadow: var(--pt-shadow-sm);
+    transform: translateY(-2px);
+}
+
+.explore-next__card strong { color: var(--pt-ink); font-size: 1rem; font-weight: 800; }
+.explore-next__card span { color: var(--pt-muted); font-size: 0.88rem; line-height: 1.55; }
+
+.explore-next__card i {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--pt-navy);
+    background: var(--pt-navy-050);
+    transform: translateY(-50%);
+}
+
+.explore-next__card i svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (max-width: 1080px) {
+    .explore-trend-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .explore-insights__split,
+    .explore-insights__split--wide { grid-template-columns: 1fr; }
+    .explore-insights__facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+    .explore-next { grid-template-columns: 1fr; }
+    .explore-insights__facts { grid-template-columns: 1fr; }
+    .explore-chart-card { padding: 16px; }
+}
+
+@media (max-width: 460px) {
+    .explore-trend-cards { grid-template-columns: 1fr; }
+}

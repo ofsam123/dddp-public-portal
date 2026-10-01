@@ -3,9 +3,27 @@ import { useSearchParams } from 'react-router-dom'
 import { loadPublicAvailableYears } from '../services/publicDataService'
 import { DEFAULT_PUBLIC_DATASET, isPublicDatasetKey } from '../data/publicDatasets'
 
+const STORED_YEAR_KEY = 'dddp.publicYear'
+
 const parseQueryYear = (value) => {
     if (!/^\d{4}$/.test(value || '')) return null
     return Number(value)
+}
+
+const readStoredYear = () => {
+    try {
+        return parseQueryYear(window.sessionStorage.getItem(STORED_YEAR_KEY))
+    } catch {
+        return null
+    }
+}
+
+const storeYear = (year) => {
+    try {
+        window.sessionStorage.setItem(STORED_YEAR_KEY, String(year))
+    } catch {
+        // Storage can be unavailable (private mode); the URL still carries the year.
+    }
 }
 
 const usePublicYear = () => {
@@ -26,7 +44,14 @@ const usePublicYear = () => {
     }, [])
 
     const years = useMemo(() => availability?.years || [], [availability])
-    const year = years.includes(queryYear) ? queryYear : availability?.latestYear || null
+    const storedYear = readStoredYear()
+    const year = years.includes(queryYear)
+        ? queryYear
+        : years.includes(storedYear) ? storedYear : availability?.latestYear || null
+
+    useEffect(() => {
+        if (year) storeYear(year)
+    }, [year])
 
     useEffect(() => {
         if (!year || queryYear === year) return

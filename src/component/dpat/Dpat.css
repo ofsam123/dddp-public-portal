@@ -96,6 +96,20 @@
     background: linear-gradient(90deg, transparent, rgba(179, 139, 63, 0.55), transparent);
 }
 
+.dpat-hero__world {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-repeat: no-repeat;
+    background-position: 70% 38%;
+    background-size: max(1180px, 96%) auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.1;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(ellipse 75% 85% at 65% 40%, #000 35%, transparent 90%);
+    mask-image: radial-gradient(ellipse 75% 85% at 65% 40%, #000 35%, transparent 90%);
+}
+
 .dpat-hero--overlap { padding-bottom: 0; overflow: visible; }
 .dpat-hero--overlap > .dpat-container { display: flow-root; }
 .dpat-hero--overlap::after { display: none; }

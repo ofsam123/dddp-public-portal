@@ -2,6 +2,7 @@ import React from 'react'
 import ExploreBreadcrumbs from './ExploreBreadcrumbs'
 import PublicYearSelector from './PublicYearSelector'
 import PublicDatasetSelector from './PublicDatasetSelector'
+import HeroBackdrop from '../../shared/HeroBackdrop'
 
 const formatRetrievedAt = (value) => {
     if (!value) return null
@@ -24,26 +25,30 @@ const DataPageHeader = ({
     const formattedRetrievedAt = formatRetrievedAt(retrievedAt)
 
     return (
-        <header className="explore-data-header">
-            <ExploreBreadcrumbs items={breadcrumbs} />
-            <div className="explore-data-header__grid">
-                <div className="explore-data-header__content">
-                    <span className="explore-data-header__eyebrow">{eyebrow}</span>
-                    <h1>{title}</h1>
-                    <p>{description}</p>
-                    {actions && <div className="explore-data-header__actions">{actions}</div>}
-                </div>
-                <div className="explore-data-header__context">
-                    {publicDataset && <PublicDatasetSelector value={publicDataset.key} onChange={publicDataset.setDataset} />}
-                    <PublicYearSelector
-                        year={publicYear.year}
-                        years={publicYear.years}
-                        isLoading={publicYear.isLoading}
-                        onChange={publicYear.setYear}
-                    />
-                    <div aria-label="Data source context">
-                        <span>{source ? `Source: ${source}` : 'Public aggregate data'}</span>
-                        {formattedRetrievedAt && <span>Retrieved {formattedRetrievedAt}</span>}
+        <header className="explore-data-header pt-page-hero">
+            <HeroBackdrop />
+            <div className="pt-container">
+                <ExploreBreadcrumbs items={breadcrumbs} />
+                <div className="explore-data-header__grid">
+                    <div className="explore-data-header__content">
+                        <span className="pt-eyebrow explore-data-header__eyebrow"><i aria-hidden="true" />{eyebrow}</span>
+                        <h1>{title}</h1>
+                        <p className="pt-page-hero__lead">{description}</p>
+                        {actions && <div className="pt-page-hero__actions explore-data-header__actions">{actions}</div>}
+                    </div>
+                    <div className="explore-data-header__context" role="group" aria-label="Data filters">
+                        <span className="explore-data-header__context-title">Data filters</span>
+                        {publicDataset && <PublicDatasetSelector value={publicDataset.key} onChange={publicDataset.setDataset} />}
+                        <PublicYearSelector
+                            year={publicYear.year}
+                            years={publicYear.years}
+                            isLoading={publicYear.isLoading}
+                            onChange={publicYear.setYear}
+                        />
+                        <div className="explore-data-header__source" aria-label="Data source context">
+                            <span>{source ? `Source: ${source}` : 'Public aggregate data'}</span>
+                            {formattedRetrievedAt && <span>Retrieved {formattedRetrievedAt}</span>}
+                        </div>
                     </div>
                 </div>
             </div>

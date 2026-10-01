@@ -41,6 +41,7 @@ const PublicGeoMap = ({
     const activeRegion = regions.find((region) => region.slug === activeRegionSlug)
     const activeSummary = activeRegion ? summariesBySlug.get(activeRegion.slug) : null
     const indicator = indicators.find((item) => item.key === indicatorKey) || indicators[0]
+    const formatValue = indicator.format || numberFormatter.format
     const values = regions
         .map((region) => summariesBySlug.get(region.slug)?.kpis?.[indicator.key])
         .filter(Number.isFinite)
@@ -84,7 +85,7 @@ const PublicGeoMap = ({
                     {activeRegion && Number.isInteger(activeValue) && (
                         <div className="public-geo-map__selected-value">
                             <span>{indicator.label}</span>
-                            <b>{numberFormatter.format(activeValue)}</b>
+                            <b>{formatValue(activeValue)}</b>
                             {activeShare !== null && <small>{percentFormatter.format(activeShare)}% of Ghana total</small>}
                         </div>
                     )}
@@ -120,7 +121,7 @@ const PublicGeoMap = ({
                                 role="link"
                                 tabIndex={0}
                                 aria-label={Number.isInteger(value)
-                                    ? `Explore ${region.name} Region. ${numberFormatter.format(value)} ${indicator.label.toLowerCase()} in ${summaryYear}${share !== null ? `, ${percentFormatter.format(share)} percent of the Ghana total` : ''}.`
+                                    ? `Explore ${region.name} Region. ${formatValue(value)} ${indicator.label.toLowerCase()} in ${summaryYear}${share !== null ? `, ${percentFormatter.format(share)} percent of the Ghana total` : ''}.`
                                     : `Explore ${region.name} Region`}
                                 onMouseEnter={() => onActiveRegionChange(region.slug)}
                                 onMouseLeave={() => onActiveRegionChange(null)}
@@ -159,9 +160,9 @@ const PublicGeoMap = ({
                 <span>Fewer</span>
                 <div aria-hidden="true" />
                 <span>More</span>
-                <small>{numberFormatter.format(minValue)}</small>
+                <small>{formatValue(minValue)}</small>
                 <small>{indicator.label}, {summaryYear}</small>
-                <small>{numberFormatter.format(maxValue)}</small>
+                <small>{formatValue(maxValue)}</small>
             </div>
         </div>
     )

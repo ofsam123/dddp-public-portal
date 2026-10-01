@@ -2,6 +2,7 @@ import React from 'react'
 import KpiGrid from './KpiGrid'
 import PublicState from './PublicState'
 import useAapSummary from '../hooks/useAapSummary'
+import { IgfSummary, SchoolSummary } from './TrackerProfiles'
 
 const AapDistribution = ({ title, distribution }) => (
     <article className="dataset-distribution">
@@ -11,8 +12,10 @@ const AapDistribution = ({ title, distribution }) => (
     </article>
 )
 
-const DatasetSummary = ({ dataset, geography, region, year, projectSummary, comparisons, isProjectLoading }) => {
+const DatasetSummary = ({ dataset, geography, region, year, projectSummary, comparisons, isProjectLoading, withYear = (path) => path }) => {
     const { data: aap, isLoading: isAapLoading } = useAapSummary({ enabled: dataset.key === 'aap', geography, regionSlug: region?.slug, year })
+    if (dataset.key === 'igf') return <IgfSummary geography={geography} region={region} year={year} withYear={withYear} />
+    if (dataset.key === 'schools') return <SchoolSummary geography={geography} region={region} year={year} withYear={withYear} />
     if (dataset.key === 'projects-programmes') return <KpiGrid items={projectSummary.kpis} context={projectSummary.kpiContext} comparisons={comparisons} isLoading={isProjectLoading} />
     if (dataset.key === 'meetings') {
         const meeting = projectSummary.kpis.filter((item) => item.id === 'meetings')
@@ -23,8 +26,7 @@ const DatasetSummary = ({ dataset, geography, region, year, projectSummary, comp
         if (!aap) return <PublicState status="unavailable" title="Annual Action Plan data is unavailable" />
         return <div className="dataset-summary"><KpiGrid items={[{ id: 'recorded-activities', label: 'Recorded activities', value: aap.metrics.recordedActivities, status: 'available' }]} context={{ geography: aap.geography.name, year: aap.period.year, source: aap.meta.source, retrievedAt: aap.meta.retrievedAt }} /><div className="dataset-distributions"><AapDistribution title="Approval classification" distribution={aap.distributions.approval} /><AapDistribution title="Activity state" distribution={aap.distributions.activityStates} /><AapDistribution title="Activity type" distribution={aap.distributions.activityTypes} /><AapDistribution title="Sector" distribution={aap.distributions.sectors} /><AapDistribution title="Development dimension" distribution={aap.distributions.developmentDimensions} /></div></div>
     }
-    const message = dataset.key === 'igf' ? 'Financial aggregates are awaiting confirmation of the IGF reporting structure.' : 'Programme reporting-year semantics must be confirmed before this dataset can be published by year.'
-    return <PublicState status="unavailable" title={`${dataset.label} is not yet available`}>{message}</PublicState>
+    return <PublicState status="unavailable" title={`${dataset.label} is not yet available`}>Programme reporting-year semantics must be confirmed before this dataset can be published by year.</PublicState>
 }
 
 export default DatasetSummary

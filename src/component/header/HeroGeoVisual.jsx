@@ -1,99 +1,154 @@
-import React from 'react'
+import React, { useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
-import DistrictDevelopmentImage from '../static/images/img/district-development.jpg'
-import CapacityBuildingImage from '../static/images/img/capacity-building 2.jpg'
-import { InfrastructureIcon } from '../shared/PortalIcons'
+import { CommunityIcon, InfrastructureIcon } from '../shared/PortalIcons'
+import { formatCedis } from '../explore/services/formatters'
 
 const MAP_URL = `${process.env.PUBLIC_URL}/data/ghana-regions.topo.json`
+const REGION_TINTS = ['#c9d6ea', '#a9bedc', '#dce5f2', '#8ea9d0', '#b9cae3', '#e6edf6']
 
-const HeroGeoVisual = () => (
-    <div className="hero-geography" aria-hidden="true">
-        <div className="hero-geography__header">
-            <span>Ghana</span>
-            <strong>Public development context</strong>
-        </div>
+const TIP_WIDTH = 232
+const TIP_OFFSET = 16
 
-        <div className="hero-geography__body">
-            <div className="hero-geography__map">
+const numberFormatter = new Intl.NumberFormat('en-GH')
+
+const normalizeName = (name = '') => name.trim().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+
+const HeroGeoVisual = ({
+    activity,
+    meetings,
+    year,
+    regions = [],
+    summariesBySlug = new Map(),
+    isRegionalLoading = false,
+    deliveryBySlug = new Map(),
+    isDeliveryLoading = false,
+    withYear = (path) => path,
+}) => {
+    const navigate = useNavigate()
+    const panelRef = useRef(null)
+    const [hover, setHover] = useState(null)
+    const regionsByName = useMemo(
+        () => new Map(regions.map((region) => [normalizeName(region.name), region])),
+        [regions],
+    )
+
+    const trackPointer = (event, geographyName) => {
+        const rect = panelRef.current?.getBoundingClientRect()
+        if (!rect) return
+        const x = event.clientX - rect.left
+        const y = event.clientY - rect.top
+        const preferred = x > rect.width * 0.55 ? x - TIP_OFFSET - TIP_WIDTH : x + TIP_OFFSET
+        setHover({
+            name: geographyName,
+            left: Math.max(8, Math.min(preferred, rect.width - TIP_WIDTH - 8)),
+            top: y,
+            below: y < 190,
+        })
+    }
+
+    const hoveredRegion = hover ? regionsByName.get(normalizeName(hover.name)) : null
+    const hoveredKpis = hoveredRegion ? summariesBySlug.get(hoveredRegion.slug)?.kpis : null
+    const formatKpi = (key) => (
+        Number.isInteger(hoveredKpis?.[key]) ? numberFormatter.format(hoveredKpis[key]) : isRegionalLoading ? '…' : '—'
+    )
+    const hoveredDelivery = hoveredRegion ? deliveryBySlug.get(hoveredRegion.slug) : null
+    const formatDelivery = (value, formatter) => (
+        Number.isFinite(value) ? formatter(value) : isDeliveryLoading ? '…' : '—'
+    )
+
+    return (
+        <div className="hero-visual" aria-hidden="true">
+            <div className="hero-visual__panel" ref={panelRef}>
+                <div className="hero-visual__panel-head">
+                    <span>Ghana</span>
+                    <small>16 regions · hover to see figures</small>
+                </div>
                 <ComposableMap
+                    className="hero-visual__map"
                     width={430}
                     height={500}
                     projection="geoMercator"
                     projectionConfig={{ center: [-1.1, 8.05], scale: 3700 }}
                     tabIndex={-1}
+                    onMouseLeave={() => setHover(null)}
                 >
                     <Geographies geography={MAP_URL}>
-                        {({ geographies }) => geographies.map((geography) => (
-                            <Geography
-                                key={geography.rsmKey}
-                                geography={geography}
-                                tabIndex={-1}
-                                fill="rgba(232, 241, 249, 0.16)"
-                                stroke="rgba(255, 255, 255, 0.68)"
-                                strokeWidth={0.7}
-                                style={{
-                                    default: { outline: 'none' },
-                                    hover: { outline: 'none' },
-                                    pressed: { outline: 'none' },
-                                }}
-                            />
-                        ))}
+                        {({ geographies }) => geographies.map((geography, index) => {
+                            const name = geography.properties.name
+                            const region = regionsByName.get(normalizeName(name))
+                            const isActive = hover?.name === name
+                            const fill = isActive ? '#16325a' : REGION_TINTS[index % REGION_TINTS.length]
+
+                            return (
+                                <Geography
+                                    key={geography.rsmKey}
+                                    geography={geography}
+                                    tabIndex={-1}
+                                    className={isActive ? 'is-active' : undefined}
+                                    onMouseEnter={(event) => trackPointer(event, name)}
+                                    onMouseMove={(event) => trackPointer(event, name)}
+                                    onClick={() => region && navigate(withYear(`/explore/regions/${region.slug}`))}
+                                    style={{
+                                        default: { fill, stroke: isActive ? '#c49a3c' : '#ffffff', strokeWidth: isActive ? 2 : 1.1, outline: 'none' },
+                                        hover: { fill, stroke: '#c49a3c', strokeWidth: 2, outline: 'none', cursor: region ? 'pointer' : 'default' },
+                                        pressed: { fill, stroke: '#c49a3c', strokeWidth: 2, outline: 'none' },
+                                    }}
+                                />
+                            )
+                        })}
                     </Geographies>
                 </ComposableMap>
+                <ol className="hero-visual__path">
+                    <li>Ghana</li>
+                    <li>Region</li>
+                    <li>District / MMDA</li>
+                </ol>
 
-                <svg
-                    className="hero-geography__connectors"
-                    viewBox="0 0 430 500"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                >
-                    <path className="hero-geography__connector" d="M66 155 L132 155 L185 170" />
-                    <path className="hero-geography__connector" d="M358 90 L318 90 L260 128" />
-                    <path className="hero-geography__connector" d="M356 370 L316 370 L250 340" />
-
-                    <g className="hero-geography__origin">
-                        <circle className="hero-geography__origin-halo" cx="185" cy="170" r="8" />
-                        <circle cx="185" cy="170" r="4" />
-                    </g>
-                    <g className="hero-geography__origin">
-                        <circle className="hero-geography__origin-halo" cx="260" cy="128" r="8" />
-                        <circle cx="260" cy="128" r="4" />
-                    </g>
-                    <g className="hero-geography__origin">
-                        <circle className="hero-geography__origin-halo" cx="250" cy="340" r="8" />
-                        <circle cx="250" cy="340" r="4" />
-                    </g>
-                </svg>
-
-                <span className="hero-geography__callout hero-geography__callout--projects">
-                    <img src={DistrictDevelopmentImage} alt="" decoding="async" />
-                </span>
-                <span className="hero-geography__callout hero-geography__callout--community">
-                    <img src={CapacityBuildingImage} alt="" decoding="async" />
-                </span>
-                <span className="hero-geography__callout hero-geography__callout--infrastructure">
-                    <InfrastructureIcon />
-                </span>
+                {hover && (
+                    <div
+                        className={`hero-map-tip${hover.below ? ' is-below' : ''}`}
+                        style={{ left: hover.left, top: hover.top, width: TIP_WIDTH }}
+                    >
+                        <strong className="hero-map-tip__title">{hoveredRegion?.name || hover.name} Region</strong>
+                        <div className="hero-map-tip__total">
+                            <span>Projects &amp; programmes</span>
+                            <b>{formatKpi('projectsProgrammesTotal')}</b>
+                        </div>
+                        <dl className="hero-map-tip__rows">
+                            <div><dt><i className="is-navy" />Projects</dt><dd>{formatKpi('projects')}</dd></div>
+                            <div><dt><i className="is-gold" />Programmes</dt><dd>{formatKpi('programmes')}</dd></div>
+                            <div><dt><i className="is-green" />Meetings</dt><dd>{formatKpi('meetings')}</dd></div>
+                            <div className="is-divided"><dt><i className="is-sky" />AAP activities</dt><dd>{formatDelivery(hoveredDelivery?.aapActivities, (value) => numberFormatter.format(value))}</dd></div>
+                            <div><dt><i className="is-teal" />IGF collected</dt><dd>{formatDelivery(hoveredDelivery?.igf.collected, formatCedis)}</dd></div>
+                            <div><dt><i className="is-rose" />IGF released</dt><dd>{formatDelivery(hoveredDelivery?.igf.released, formatCedis)}</dd></div>
+                        </dl>
+                        <small className="hero-map-tip__foot">
+                            {!hoveredKpis && !isRegionalLoading
+                                ? `${year ? `${year} d` : 'D'}ata unavailable`
+                                : `${year || ''}${year ? ' · ' : ''}Click to explore`}
+                        </small>
+                    </div>
+                )}
             </div>
 
-            <div className="hero-geography__hierarchy" aria-label="Ghana geographic scale: national, region, district or MMDA">
-                <ol>
-                    <li>
-                        <span>01</span>
-                        <strong>Ghana <small>National</small></strong>
-                    </li>
-                    <li>
-                        <span>02</span>
-                        <strong>Region</strong>
-                    </li>
-                    <li>
-                        <span>03</span>
-                        <strong>District / MMDA</strong>
-                    </li>
-                </ol>
+            <div className="hero-visual__card hero-visual__card--activity">
+                <span className="hero-visual__icon pt-icon"><InfrastructureIcon /></span>
+                <div>
+                    <small>Projects &amp; programmes{year ? ` · ${year}` : ''}</small>
+                    <strong>{activity}</strong>
+                </div>
+            </div>
+
+            <div className="hero-visual__card hero-visual__card--meetings">
+                <span className="hero-visual__icon hero-visual__icon--gold pt-icon"><CommunityIcon /></span>
+                <div>
+                    <small>Meetings recorded</small>
+                    <strong>{meetings}</strong>
+                </div>
             </div>
         </div>
-    </div>
-)
+    )
+}
 
 export default HeroGeoVisual

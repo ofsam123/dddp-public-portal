@@ -201,8 +201,8 @@ const buildFindings = ({ analysis, insights, yearly, scale, year }) => {
             icon: 'alert',
             tone: 'negative',
             label: `Rated ${analysis.lowestBand.label}`,
-            value: plural(analysis.lowCount, 'district'),
-            text: `Scored below ${scale[scale.length - 2]?.min ?? analysis.threshold}% and may need targeted support.`,
+            value: formatPercent((analysis.lowCount / scored.length) * 100, 0),
+            text: `${analysis.lowCount} of ${scored.length} districts scored below ${scale[scale.length - 2]?.min ?? analysis.threshold}% and may need targeted support.`,
         },
         analysis.regionRows.length > 1 && {
             key: 'regions',
@@ -241,8 +241,8 @@ const buildFindings = ({ analysis, insights, yearly, scale, year }) => {
             icon: 'shield',
             tone: 'brass',
             label: 'Compliance indicators met',
-            value: `${(analysis.averageCi ?? 0).toFixed(1)} of 4`,
-            text: `On average. ${plural(insights.fullCompliance, 'district')} fulfilled all four; ${analysis.noCi} fulfilled none.`,
+            value: `${(analysis.averageCi ?? 0).toFixed(1)} of 4 · ${formatPercent(((analysis.averageCi ?? 0) / 4) * 100, 0)}`,
+            text: `On average. ${plural(insights.fullCompliance, 'district')} (${formatPercent((insights.fullCompliance / scored.length) * 100, 0)}) fulfilled all four; ${analysis.noCi} (${formatPercent((analysis.noCi / scored.length) * 100, 0)}) fulfilled none.`,
         },
         yearly?.movers && {
             key: 'yoy',

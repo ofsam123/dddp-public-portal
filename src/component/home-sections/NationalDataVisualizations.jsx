@@ -10,7 +10,7 @@ import './CitizenProjectInsights.css'
 import './NationalDataVisualizations.css'
 
 const numberFormatter = new Intl.NumberFormat('en-GH')
-const percentFormatter = new Intl.NumberFormat('en-GH', { maximumFractionDigits: 2 })
+const percentFormatter = new Intl.NumberFormat('en-GH', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 
 const DistributionLoading = ({ rows }) => (
     <div className="distribution-loading" aria-label="Loading distribution">
@@ -23,7 +23,7 @@ const DistributionLoading = ({ rows }) => (
     </div>
 )
 
-const DistributionChart = ({ distribution, isLoading, title, question, year, initialLimit }) => {
+const DistributionChart = ({ distribution, isLoading, title, question, description, year, initialLimit }) => {
     const [showAll, setShowAll] = useState(false)
     const categories = useMemo(() => (
         (distribution?.categories || [])
@@ -39,15 +39,15 @@ const DistributionChart = ({ distribution, isLoading, title, question, year, ini
         <article className="distribution-chart" aria-labelledby={titleId}>
             <div className="distribution-chart__heading">
                 <div className="distribution-chart__context">
-                    <span className="section-kicker">{year || 'Selected year'}</span>
+                    <span className="section-kicker" id={titleId}>{title}</span>
                     {distribution && (
                         <span>
                             <strong>{numberFormatter.format(distribution.total)}</strong> eligible records
                         </span>
                     )}
                 </div>
-                <h3 id={titleId}>{title}</h3>
-                <p>{question}</p>
+                <h3>{question}</h3>
+                <p>{description}{year ? ` Recorded in ${year}.` : ''}</p>
             </div>
 
             {distribution ? (
@@ -98,69 +98,75 @@ const NationalDataVisualizations = ({ breakdownsData, isLoading, year }) => {
 
     return (
         <PublicMotionSection
-            className="national-data"
+            className="pt-section pt-section--tint national-data"
             aria-labelledby="national-data-title"
             onEnter={handleEnter}
         >
-            <PublicMotionItem className="national-data__heading">
-                <span className="section-kicker">National insights</span>
-                <h2 id="national-data-title">What does the national data tell us?</h2>
-                <p>A closer look at recorded development and governance activity in {year || 'the selected year'}.</p>
-            </PublicMotionItem>
-            <InsightRibbon
-                active={hasEntered}
-                breakdownsData={breakdownsData}
-                isLoading={isLoading}
-            />
-            <PlannedActivity
-                activity={breakdownsData?.plannedProjectActivity}
-                active={hasEntered}
-                isLoading={isLoading}
-                year={year}
-            />
-            <div className="national-data__story-block">
-                <PublicMotionItem className="national-data__story-heading">
-                    <span>Development focus</span>
-                    <h3>Where are projects and development activity focused?</h3>
+            <div className="pt-container">
+                <PublicMotionItem className="pt-section-head">
+                    <div>
+                        <span className="section-kicker">National insights</span>
+                        <h2 id="national-data-title">What does the national data tell us?</h2>
+                        <p>Where recorded development activity is focused, who funds it and how it is governed in {year || 'the selected year'}.</p>
+                    </div>
                 </PublicMotionItem>
-                <div className="national-data__pair national-data__pair--focus">
-                    <SectorLandscape
-                        distribution={breakdownsData?.projectSectors}
-                        isLoading={isLoading}
-                        year={year}
-                    />
-                    <PublicMotionItem>
-                        <DistributionChart
-                            distribution={breakdownsData?.developmentDimensions}
+                <InsightRibbon
+                    active={hasEntered}
+                    breakdownsData={breakdownsData}
+                    isLoading={isLoading}
+                />
+                <PlannedActivity
+                    activity={breakdownsData?.plannedProjectActivity}
+                    active={hasEntered}
+                    isLoading={isLoading}
+                    year={year}
+                />
+                <div className="national-data__story-block">
+                    <PublicMotionItem className="national-data__story-heading">
+                        <span>01 · Development focus</span>
+                        <h3>Where is development activity focused?</h3>
+                    </PublicMotionItem>
+                    <div className="national-data__pair national-data__pair--focus">
+                        <SectorLandscape
+                            distribution={breakdownsData?.projectSectors}
                             isLoading={isLoading}
-                            title="Development dimensions"
-                            question="Recorded Projects and Programmes grouped by development dimension."
                             year={year}
                         />
-                    </PublicMotionItem>
+                        <PublicMotionItem>
+                            <DistributionChart
+                                distribution={breakdownsData?.developmentDimensions}
+                                isLoading={isLoading}
+                                title="Development dimensions"
+                                question="Which Development Dimensions lead implemented activity?"
+                                description="Projects and programmes grouped by development dimension."
+                                year={year}
+                            />
+                        </PublicMotionItem>
+                    </div>
                 </div>
-            </div>
-            <div className="national-data__story-block national-data__story-block--support">
-                <PublicMotionItem className="national-data__story-heading">
-                    <span>Support and governance</span>
-                    <h3>How is recorded activity supported and governed?</h3>
-                </PublicMotionItem>
-                <div className="national-data__pair national-data__pair--support">
-                    <FundingLandscape
-                        distribution={breakdownsData?.primaryFundingSources}
-                        isLoading={isLoading}
-                        year={year}
-                    />
-                    <PublicMotionItem>
-                        <DistributionChart
-                            distribution={breakdownsData?.meetingTypes}
-                            isLoading={isLoading}
-                            title="Meeting types"
-                            question="Recorded governance activity grouped by meeting type."
-                            year={year}
-                            initialLimit={8}
-                        />
+                <div className="national-data__story-block national-data__story-block--support">
+                    <PublicMotionItem className="national-data__story-heading">
+                        <span>02 · Support and governance</span>
+                        <h3>How is activity funded and governed?</h3>
                     </PublicMotionItem>
+                    <div className="national-data__pair national-data__pair--support">
+                        <FundingLandscape
+                            distribution={breakdownsData?.primaryFundingSources}
+                            isLoading={isLoading}
+                            year={year}
+                        />
+                        <PublicMotionItem>
+                            <DistributionChart
+                                distribution={breakdownsData?.meetingTypes}
+                                isLoading={isLoading}
+                                title="Meeting types"
+                                question="How are districts meeting to govern?"
+                                description="Recorded governance activity grouped by meeting type."
+                                year={year}
+                                initialLimit={8}
+                            />
+                        </PublicMotionItem>
+                    </div>
                 </div>
             </div>
         </PublicMotionSection>
