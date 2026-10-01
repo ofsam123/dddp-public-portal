@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { LineChart, ScatterPlot, Sparkline } from '../../shared/charts/PortalCharts'
+import { formatCedis } from '../services/formatters'
 import './ExploreInsights.css'
 
 const numberFormat = new Intl.NumberFormat('en-GH')
@@ -11,6 +12,12 @@ const SERIES = [
     { key: 'projects', label: 'Projects', color: '#16325a' },
     { key: 'programmes', label: 'Programmes', color: '#c49a3c' },
     { key: 'meetings', label: 'Meetings', color: '#1f8f5f' },
+]
+
+const AAP_SERIES = { key: 'aapActivities', label: 'AAP activities', color: '#5b7cab' }
+const IGF_SERIES = [
+    { key: 'igfCollected', label: 'IGF collected', color: '#0f8a7e' },
+    { key: 'igfReleased', label: 'IGF released', color: '#c2553f' },
 ]
 
 const changeBetween = (current, previous) => {
@@ -30,7 +37,7 @@ const Change = ({ value, previousYear }) => {
 
 const Placeholder = ({ children }) => <p className="explore-insights__placeholder" role="status">{children}</p>
 
-export const ExploreTrends = ({ year, trend }) => {
+export const ExploreTrends = ({ year, trend, delivery = { data: null, isLoading: false } }) => {
     const rows = trend.summaries
     const index = trend.years.indexOf(year)
     const current = rows[index]
@@ -38,16 +45,35 @@ export const ExploreTrends = ({ year, trend }) => {
     const pipelineCurrent = trend.pipeline[index]
     const pipelinePrevious = index > 0 ? trend.pipeline[index - 1] : null
     const hasRows = rows.some(Boolean)
+    const deliveryByYear = new Map((delivery.data?.series || []).map((row) => [row.year, row]))
+    const deliveryRows = trend.years.map((item) => deliveryByYear.get(item) || null)
+    const deliveryCurrent = deliveryRows[index]
+    const deliveryPrevious = index > 0 ? deliveryRows[index - 1] : null
+    const deliveryCard = (series, extra) => ({
+        ...series,
+        value: deliveryCurrent?.[series.key],
+        change: changeBetween(deliveryCurrent?.[series.key], deliveryPrevious?.[series.key]),
+        values: deliveryRows.map((row) => row?.[series.key] ?? null),
+        loading: delivery.isLoading,
+        ...extra,
+    })
 
     const cards = [
-        ...SERIES.map((series) => ({
+        ...SERIES.filter((series) => series.key !== 'meetings').map((series) => ({
             ...series,
             value: current?.[series.key],
             change: changeBetween(current?.[series.key], previous?.[series.key]),
             values: rows.map((row) => row?.[series.key] ?? null),
-            note: series.key === 'meetings' ? 'Recorded assembly meetings' : `Active during ${year || 'the year'}`,
+            note: `Active during ${year || 'the year'}`,
             loading: trend.isLoading,
         })),
+        deliveryCard(IGF_SERIES[0], {
+            label: 'IGF collected & released',
+            format: formatCedis,
+            note: deliveryCurrent ? `Released: ${formatCedis(deliveryCurrent.igfReleased)}` : 'Internally Generated Funds',
+        }),
+        deliveryCard({ ...AAP_SERIES, label: 'Annual planned activities' }, { note: 'Activities in Annual Action Plans' }),
+        deliveryCard({ key: 'completedProjects', label: 'Completed projects', color: '#1f8f5f' }, { note: 'Reported completed during the year' }),
         {
             key: 'starts',
             label: 'Expected project starts',
@@ -83,7 +109,7 @@ export const ExploreTrends = ({ year, trend }) => {
                     {cards.map((card) => (
                         <article className="explore-trend-card" key={card.key} style={{ '--accent': card.color }}>
                             <span className="explore-trend-card__label"><i aria-hidden="true" />{card.label}</span>
-                            <strong>{card.loading ? '…' : formatNumber(card.value)}</strong>
+                            <strong>{card.loading ? '…' : (card.format || formatNumber)(card.value)}</strong>
                             {!card.loading && <Change value={card.change} previousYear={trend.years[index - 1]} />}
                             <div className="explore-trend-card__spark">
                                 <Sparkline values={card.values} color={card.color} />
@@ -98,17 +124,21 @@ export const ExploreTrends = ({ year, trend }) => {
                 <div className="explore-section__heading">
                     <span className="section-kicker">Over time</span>
                     <h2 id="explore-trend-title">How recorded activity has changed</h2>
-                    <p>Projects and programmes whose implementation period overlaps each year, and meetings held, from {trend.years[0] || '…'} to {year || '…'}. Hover the chart for each year&apos;s figures.</p>
+                    <p>Projects and programmes whose implementation period overlaps each year, meetings held, Annual Action Plan (AAP) activities and Internally Generated Funds (IGF) collected and released, from {trend.years[0] || '…'} to {year || '…'}. Hover the charts for each year&apos;s figures.</p>
                 </div>
                 <div className="explore-insights__split">
                     <div className="explore-chart-card">
+                        <h3 className="explore-chart-card__title">Activity recorded</h3>
                         {trend.isLoading ? <Placeholder>Loading national trend…</Placeholder> : hasRows ? (
                             <LineChart
                                 xValues={trend.years}
                                 activeX={year}
                                 formatY={formatNumber}
-                                ariaLabel={`Line chart of projects, programmes and meetings in Ghana from ${trend.years[0]} to ${year}`}
-                                series={SERIES.map((series) => ({ ...series, values: rows.map((row) => row?.[series.key] ?? null) }))}
+                                ariaLabel={`Line chart of projects, programmes, meetings and AAP activities in Ghana from ${trend.years[0]} to ${year}`}
+                                series={[
+                                    ...SERIES.map((series) => ({ ...series, values: rows.map((row) => row?.[series.key] ?? null) })),
+                                    { ...AAP_SERIES, values: deliveryRows.map((row) => row?.aapActivities ?? null) },
+                                ]}
                             />
                         ) : <Placeholder>The national trend is not available right now.</Placeholder>}
                     </div>
@@ -127,6 +157,39 @@ export const ExploreTrends = ({ year, trend }) => {
                             <span>Meetings per 100 activities</span>
                             <strong>{meetingsPerHundred === null ? '—' : meetingsPerHundred.toFixed(0)}</strong>
                             <p>in {year || 'the selected year'}</p>
+                        </div>
+                    </aside>
+                </div>
+                <div className="explore-insights__split">
+                    <div className="explore-chart-card">
+                        <h3 className="explore-chart-card__title">Internally Generated Funds (GH₵)</h3>
+                        {delivery.isLoading ? <Placeholder>Loading IGF figures… this can take a few seconds.</Placeholder> : deliveryRows.some(Boolean) ? (
+                            <LineChart
+                                xValues={trend.years}
+                                activeX={year}
+                                formatY={formatCedis}
+                                yTickFormat={(value) => formatCedis(value).replace('GH₵ ', '')}
+                                height={260}
+                                ariaLabel={`Line chart of IGF collected and released in Ghana from ${trend.years[0]} to ${year}`}
+                                series={IGF_SERIES.map((series) => ({ ...series, values: deliveryRows.map((row) => row?.[series.key] ?? null) }))}
+                            />
+                        ) : <Placeholder>IGF figures are not available right now.</Placeholder>}
+                    </div>
+                    <aside className="explore-insights__facts" aria-label="IGF and AAP highlights">
+                        <div>
+                            <span>IGF collected in {year || '…'}</span>
+                            <strong>{formatCedis(deliveryCurrent?.igfCollected)}</strong>
+                            <p>{deliveryPrevious ? `${formatCedis(deliveryPrevious.igfCollected)} in ${deliveryPrevious.year}` : 'As recorded in the IGF tracker'}</p>
+                        </div>
+                        <div>
+                            <span>IGF released in {year || '…'}</span>
+                            <strong>{formatCedis(deliveryCurrent?.igfReleased)}</strong>
+                            <p>Capital expenditure releases reported by assemblies</p>
+                        </div>
+                        <div>
+                            <span>AAP activities in {year || '…'}</span>
+                            <strong>{formatNumber(deliveryCurrent?.aapActivities)}</strong>
+                            <p>{deliveryPrevious ? `${formatNumber(deliveryPrevious.aapActivities)} in ${deliveryPrevious.year}` : 'Planned in Annual Action Plans'}</p>
                         </div>
                     </aside>
                 </div>

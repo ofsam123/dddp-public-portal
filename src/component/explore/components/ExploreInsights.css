@@ -16,10 +16,19 @@
     box-shadow: var(--pt-shadow-sm);
 }
 
+.explore-chart-card__title {
+    margin: 0 0 12px;
+    color: var(--pt-ink);
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.explore-insights .explore-insights__split + .explore-insights__split { margin-top: 20px; }
+
 /* KPI trend cards */
 .explore-trend-cards {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
 }
 

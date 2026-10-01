@@ -16,6 +16,8 @@ const Header = ({
     isLoading,
     summariesBySlug,
     isRegionalLoading,
+    deliveryBySlug,
+    isDeliveryLoading,
     withYear,
 }) => {
     const regions = geographyData?.meta?.regionCount
@@ -41,7 +43,7 @@ const Header = ({
                             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
                         </Link>
                         <Link className="pt-button pt-button--secondary" to="/dpat/performance-analysis">
-                            See DPAT results
+                            DPAT Performance
                         </Link>
                     </div>
 
@@ -59,6 +61,8 @@ const Header = ({
                     regions={geographyData?.regions}
                     summariesBySlug={summariesBySlug}
                     isRegionalLoading={isRegionalLoading}
+                    deliveryBySlug={deliveryBySlug}
+                    isDeliveryLoading={isDeliveryLoading}
                     withYear={withYear}
                 />
             </div>

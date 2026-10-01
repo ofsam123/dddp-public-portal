@@ -137,7 +137,7 @@ const NationalDataVisualizations = ({ breakdownsData, isLoading, year }) => {
                                 distribution={breakdownsData?.developmentDimensions}
                                 isLoading={isLoading}
                                 title="Development dimensions"
-                                question="Which development dimensions lead recorded activity?"
+                                question="Which Development Dimensions lead implemented activity?"
                                 description="Projects and programmes grouped by development dimension."
                                 year={year}
                             />

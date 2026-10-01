@@ -16,6 +16,8 @@ const {
     PublicSummaryError,
 } = require('./publicSummary')
 const { createDddpAapSummaryAdapter, createDddpPwdaProgrammesSummaryAdapter } = require('./publicDatasetAggregates')
+const { createDeliveryLoader } = require('./publicDelivery')
+const { createSchoolProfileLoader } = require('./publicSchools')
 const { createDpatPublicService, DpatPublicError } = require('./dpatPublic')
 const { createLisaPublicService, LisaPublicError, LISA_ROUTE_PREFIX } = require('./lisaPublic')
 const { createLisaClimateService, LisaClimateError, CLIMATE_ROUTE_PREFIX } = require('./lisaClimate')
@@ -364,6 +366,52 @@ const handlePublicDatasetSummary = async (dataset, requestUrl, response) => {
     }
 }
 
+let deliveryLoader = null
+const getDeliveryLoader = () => {
+    if (!deliveryLoader) {
+        deliveryLoader = createDeliveryLoader({
+            baseURL: process.env.DDDP_API_BASE_URL,
+            username: process.env.DDDP_API_USERNAME,
+            password: process.env.DDDP_API_PASSWORD,
+            loadGeographyContext,
+            ttlMs: CACHE_TTL_MS,
+        })
+    }
+    return deliveryLoader
+}
+
+let schoolProfileLoader = null
+const getSchoolProfileLoader = () => {
+    if (!schoolProfileLoader) {
+        schoolProfileLoader = createSchoolProfileLoader({
+            baseURL: process.env.DDDP_API_BASE_URL,
+            username: process.env.DDDP_API_USERNAME,
+            password: process.env.DDDP_API_PASSWORD,
+            loadGeographyContext,
+        })
+    }
+    return schoolProfileLoader
+}
+
+const scopeInput = (requestUrl) => ({
+    year: requestUrl.searchParams.get('year'),
+    regionSlug: requestUrl.searchParams.get('regionSlug') || undefined,
+    districtSlug: requestUrl.searchParams.get('districtSlug') || undefined,
+})
+
+const handlePublicAggregate = async (label, load, response) => {
+    try {
+        sendJson(response, 200, await load())
+    } catch (error) {
+        if (error instanceof PublicSummaryError) {
+            sendJson(response, error.statusCode, { error: error.message })
+            return
+        }
+        console.error(`Public ${label} refresh failed (${error.code || error.name || 'request-error'})`)
+        sendJson(response, 503, { error: `Public ${label} data is temporarily unavailable.` })
+    }
+}
+
 let dpatService = null
 const getDpatService = () => {
     if (!dpatService) {
@@ -559,6 +607,24 @@ const server = http.createServer(async (request, response) => {
         return
     }
 
+    if (request.method === 'GET' && requestUrl.pathname === '/api/public/delivery') {
+        await handlePublicAggregate('delivery', () => getDeliveryLoader().getSummary(scopeInput(requestUrl)), response)
+        return
+    }
+
+    if (request.method === 'GET' && requestUrl.pathname === '/api/public/delivery-series') {
+        await handlePublicAggregate('delivery series', () => getDeliveryLoader().getSeries({
+            from: requestUrl.searchParams.get('from'),
+            to: requestUrl.searchParams.get('to'),
+        }), response)
+        return
+    }
+
+    if (request.method === 'GET' && requestUrl.pathname === '/api/public/schools') {
+        await handlePublicAggregate('school profile', () => getSchoolProfileLoader().getSummary(scopeInput(requestUrl)), response)
+        return
+    }
+
     if (request.method !== 'GET' && request.method !== 'HEAD') {
         sendJson(response, 405, { error: 'Method not allowed.' })
         return
@@ -590,6 +656,9 @@ if (require.main === module) {
         } catch (error) {
             console.error(`DPAT service is not configured (${error.message})`)
         }
+        loadAvailableYears()
+            .then(({ latestYear }) => getDeliveryLoader().warm(latestYear))
+            .catch((error) => console.error(`Delivery warm-up failed (${error.code || error.name || 'request-error'})`))
     })
 }
 

@@ -62,7 +62,7 @@ const PURPOSE = [
 ]
 
 const STEPS = [
-    { title: 'Evidence prepared', text: 'Each assembly compiles the records and documents that show what it did during the assessment year, indicator by indicator.' },
+    { title: 'Evidence prepared', text: 'Each district inputs its data into the DDDP platform, and the platform compiles the records and documents that show what the assembly did during the assessment year, indicator by indicator.' },
     { title: 'Independent assessment', text: 'Assessors verify the evidence for every indicator against its published scoring criteria and record points awarded.' },
     { title: 'Review and validation', text: 'Results go through a structured review and validation process before they are confirmed as final.' },
     { title: 'Final Score and outcome', text: 'Service delivery and performance points are added into a Final Score out of 100 and placed in an outcome band.' },

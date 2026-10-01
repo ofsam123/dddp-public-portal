@@ -38,11 +38,11 @@ const HomeUpdates = () => {
             <div className="pt-container">
                 <PublicMotionItem className="pt-section-head">
                     <div>
-                        <span className="section-kicker">News and updates</span>
-                        <h2 id="updates-title">Stories from the districts</h2>
-                        <p>Training, capacity building and data use across Ghana's assemblies.</p>
+                        <span className="section-kicker">Events</span>
+                        <h2 id="updates-title">Events</h2>
+                        <p>Training, capacity building and data use events across Ghana's assemblies.</p>
                     </div>
-                    <Link className="pt-link" to="/updates">View all updates <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></Link>
+                    <Link className="pt-link" to="/updates">View all events <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></Link>
                 </PublicMotionItem>
 
                 <PublicMotionItem className="updates-editorial">

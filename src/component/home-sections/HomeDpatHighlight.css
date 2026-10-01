@@ -1,3 +1,43 @@
+.home-dpat__actions {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.home-dpat__year {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+}
+
+.home-dpat__year span {
+    color: var(--pt-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.home-dpat__year select {
+    min-width: 120px;
+    min-height: 44px;
+    padding: 0 34px 0 14px;
+    border: 1px solid rgba(22, 50, 90, 0.18);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--pt-navy);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.home-dpat__year select:focus-visible {
+    outline: 3px solid rgba(42, 169, 213, 0.45);
+    outline-offset: 2px;
+}
+
 .home-dpat__grid {
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);

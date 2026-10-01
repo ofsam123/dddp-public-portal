@@ -61,7 +61,7 @@ export const InsightRibbon = ({ active, breakdownsData, isLoading }) => {
                 ) : (
                     <RibbonState isLoading={isLoading} />
                 )}
-                <span>Leading primary funding source</span>
+                <span>Leading funding source</span>
             </div>
         </PublicMotionItem>
     )

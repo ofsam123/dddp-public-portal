@@ -7,12 +7,15 @@ import ExploreBreadcrumbs from '../../explore/components/ExploreBreadcrumbs'
 import { climatePhotoUrl, getClimateOverview } from '../service/climate.service'
 import {
     MAX_PLAUSIBLE_AFFECTED,
+    RAINY_SEASONS,
     RISK_LEVELS,
     buildClimateIndex,
     formatDate,
     formatNumber,
+    keyFindings,
     summarise,
 } from './climateData'
+import { ClimateMap, FieldGallery, KeyFindings, MatrixPanel, SeasonPanel, TopPlaces } from './ClimateSections'
 import './ClimateChange.css'
 
 const PAGE_SIZE = 10
@@ -297,6 +300,16 @@ const ClimateChange = () => {
         && (!photosOnly || row.photos.length)), [scopedRows, level, type, year, photosOnly])
 
     const scoped = useMemo(() => summarise(scopedRows), [scopedRows])
+    const findings = useMemo(() => keyFindings(scopedRows, scoped), [scopedRows, scoped])
+    const regionNames = index.tree.map((item) => item.name.replace(/\s+Region$/i, '')).join(', ')
+    const rainyShare = useMemo(() => {
+        const dated = scoped.months.reduce((sum, item) => sum + item.total, 0)
+        if (!dated) return null
+        const rainy = scoped.months
+            .filter((item) => RAINY_SEASONS.some((season) => season.months.includes(item.month)))
+            .reduce((sum, item) => sum + item.total, 0)
+        return Math.round((rainy / dated) * 100)
+    }, [scoped])
 
     useEffect(() => { setVisible(PAGE_SIZE) }, [scope, level, type, year, photosOnly])
 
@@ -360,21 +373,68 @@ const ClimateChange = () => {
                     {state.status === 'ready' && (
                         <>
                             <section className="cc-section" aria-labelledby="cc-glance-title">
-                                <div className="cc-section__head">
-                                    <span className="section-kicker">At a glance</span>
-                                    <h2 id="cc-glance-title">
-                                        {scopeTrail.length ? `Climate events in ${scopeTrail[scopeTrail.length - 1]}` : 'What communities are recording'}
-                                    </h2>
-                                    <p>
-                                        {formatNumber(scoped.records)} records
-                                        {scoped.communities ? ` from ${formatNumber(scoped.communities)} ${scoped.communities === 1 ? 'community' : 'communities'}` : ''}
-                                        {scoped.affectedReported ? `, affecting ${formatNumber(scoped.affected)} people where a figure was reported` : ''}.
-                                    </p>
+                                <div className="cc-section__head cc-section__head--split">
+                                    <div>
+                                        <span className="section-kicker">{scopeTrail.length ? 'Selected place' : 'Overview'}</span>
+                                        <h2 id="cc-glance-title">
+                                            {scopeTrail.length ? `Climate events in ${scopeTrail[scopeTrail.length - 1]}` : 'What communities are recording'}
+                                        </h2>
+                                        <p>
+                                            {formatNumber(scoped.records)} records
+                                            {scoped.communities ? ` from ${formatNumber(scoped.communities)} ${scoped.communities === 1 ? 'community' : 'communities'}` : ''}
+                                            {scoped.affectedReported ? `, affecting ${formatNumber(scoped.affected)} people where a figure was reported` : ''}.
+                                        </p>
+                                    </div>
+                                    {scopeTrail.length > 0 && (
+                                        <button type="button" className="pt-button pt-button--secondary pt-button--sm" onClick={() => setScope({})}>
+                                            Show all places
+                                        </button>
+                                    )}
                                 </div>
+                                <KeyFindings findings={findings} />
                                 <div className="cc-glance">
                                     <RiskLevelPanel summary={scoped} />
                                     <YearPanel summary={scoped} />
                                     <TypePanel summary={scoped} />
+                                </div>
+                            </section>
+
+                            <section className="cc-section" aria-labelledby="cc-map-title">
+                                <div className="cc-section__head">
+                                    <span className="section-kicker">Where</span>
+                                    <h2 id="cc-map-title">Where events are recorded</h2>
+                                    <p>
+                                        Records so far come from {overall.regions} {overall.regions === 1 ? 'region' : 'regions'}: {regionNames}.
+                                        Select a region or a point to focus the page on it.
+                                    </p>
+                                </div>
+                                <ClimateMap rows={index.rows} scope={scope} onScope={chooseScope} />
+                            </section>
+
+                            <section className="cc-section" aria-labelledby="cc-when-title">
+                                <div className="cc-section__head">
+                                    <span className="section-kicker">When and how serious</span>
+                                    <h2 id="cc-when-title">Seasons and severity</h2>
+                                    <p>
+                                        {rainyShare !== null ? `${rainyShare}% of dated events happened during the rainy seasons. ` : ''}
+                                        The table shows which risks are most often rated high.
+                                    </p>
+                                </div>
+                                <div className="cc-duo">
+                                    <SeasonPanel summary={scoped} />
+                                    <MatrixPanel rows={scopedRows} />
+                                </div>
+                            </section>
+
+                            <section className="cc-section" aria-labelledby="cc-field-title">
+                                <div className="cc-section__head">
+                                    <span className="section-kicker">From the field</span>
+                                    <h2 id="cc-field-title">Places and photos</h2>
+                                    <p>The places reporting most often, and the latest photos officers have taken of climate events.</p>
+                                </div>
+                                <div className="cc-duo cc-duo--field">
+                                    <TopPlaces rows={scopedRows} onScope={chooseScope} />
+                                    <FieldGallery rows={scopedRows} onScope={chooseScope} />
                                 </div>
                             </section>
 

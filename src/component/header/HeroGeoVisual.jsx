@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 import { CommunityIcon, InfrastructureIcon } from '../shared/PortalIcons'
+import { formatCedis } from '../explore/services/formatters'
 
 const MAP_URL = `${process.env.PUBLIC_URL}/data/ghana-regions.topo.json`
 const REGION_TINTS = ['#c9d6ea', '#a9bedc', '#dce5f2', '#8ea9d0', '#b9cae3', '#e6edf6']
@@ -20,6 +21,8 @@ const HeroGeoVisual = ({
     regions = [],
     summariesBySlug = new Map(),
     isRegionalLoading = false,
+    deliveryBySlug = new Map(),
+    isDeliveryLoading = false,
     withYear = (path) => path,
 }) => {
     const navigate = useNavigate()
@@ -48,6 +51,10 @@ const HeroGeoVisual = ({
     const hoveredKpis = hoveredRegion ? summariesBySlug.get(hoveredRegion.slug)?.kpis : null
     const formatKpi = (key) => (
         Number.isInteger(hoveredKpis?.[key]) ? numberFormatter.format(hoveredKpis[key]) : isRegionalLoading ? '…' : '—'
+    )
+    const hoveredDelivery = hoveredRegion ? deliveryBySlug.get(hoveredRegion.slug) : null
+    const formatDelivery = (value, formatter) => (
+        Number.isFinite(value) ? formatter(value) : isDeliveryLoading ? '…' : '—'
     )
 
     return (
@@ -112,6 +119,9 @@ const HeroGeoVisual = ({
                             <div><dt><i className="is-navy" />Projects</dt><dd>{formatKpi('projects')}</dd></div>
                             <div><dt><i className="is-gold" />Programmes</dt><dd>{formatKpi('programmes')}</dd></div>
                             <div><dt><i className="is-green" />Meetings</dt><dd>{formatKpi('meetings')}</dd></div>
+                            <div className="is-divided"><dt><i className="is-sky" />AAP activities</dt><dd>{formatDelivery(hoveredDelivery?.aapActivities, (value) => numberFormatter.format(value))}</dd></div>
+                            <div><dt><i className="is-teal" />IGF collected</dt><dd>{formatDelivery(hoveredDelivery?.igf.collected, formatCedis)}</dd></div>
+                            <div><dt><i className="is-rose" />IGF released</dt><dd>{formatDelivery(hoveredDelivery?.igf.released, formatCedis)}</dd></div>
                         </dl>
                         <small className="hero-map-tip__foot">
                             {!hoveredKpis && !isRegionalLoading

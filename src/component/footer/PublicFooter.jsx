@@ -21,7 +21,7 @@ const PublicFooter = ({ withYear = (path) => path, showCta = true }) => {
                         </div>
                         <div className="site-footer__cta-actions">
                             <Link className="pt-button pt-button--primary" to={withYear('/explore')}>Explore data</Link>
-                            <Link className="pt-button pt-button--secondary" to="/dpat/performance-analysis">DPAT results</Link>
+                            <Link className="pt-button pt-button--secondary" to="/dpat/performance-analysis">DPAT Performance</Link>
                         </div>
                     </div>
                 </section>
@@ -46,7 +46,7 @@ const PublicFooter = ({ withYear = (path) => path, showCta = true }) => {
                     <h3>Resources</h3>
                     <Link to="/climate">LISA climate information</Link>
                     <Link to="/all-forcast">Forecast history</Link>
-                    <Link to="/updates">News and updates</Link>
+                    <Link to="/updates">Events</Link>
                     <Link to="/apr/mmda">Annual progress reports</Link>
                 </nav>
 
@@ -63,6 +63,8 @@ const PublicFooter = ({ withYear = (path) => path, showCta = true }) => {
             <div className="site-footer__bottom">
                 <div className="pt-container">
                     <span>&copy; {new Date().getFullYear()} District Development Data Platform. Republic of Ghana.</span>
+                    
+                    <span>&copy;  Developed by AO HOLDINGS</span>
                     <button type="button" onClick={scrollToTop}>
                         Back to top
                         <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10V2M2.5 5.5L6 2l3.5 3.5" /></svg>

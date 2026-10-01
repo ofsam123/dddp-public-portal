@@ -10,7 +10,7 @@ test('renders the public portal homepage', () => {
   const geography = screen.getByRole('heading', { name: /start national, then go local/i });
   const lisa = screen.getByRole('heading', { name: /climate information for local planning/i });
   const reports = screen.getByRole('heading', { name: /publications and tools/i });
-  const updates = screen.getByRole('heading', { name: /stories from the districts/i });
+  const updates = screen.getByRole('heading', { level: 2, name: /^events$/i });
   const footerCta = screen.getByRole('heading', { name: /put district development data to work/i });
   const follows = (first, second) => Boolean(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING);
 

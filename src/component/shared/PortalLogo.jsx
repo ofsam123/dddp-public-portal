@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import DDDPlogo from '../static/images/img/dddp-logo-cropped.png'
+import DDDPlogo from '../static/images/img/logo.png'
 import './PortalLogo.css'
 
 const PortalLogo = ({

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDpatScores, useDpatYears } from '../dpat/hooks/useDpat'
 import { classificationColor, districtPath, formatPercent, scoredDistricts, shortDistrictName } from '../dpat/dpatFormat'
@@ -7,7 +7,9 @@ import './HomeDpatHighlight.css'
 
 const HomeDpatHighlight = () => {
     const years = useDpatYears()
-    const year = years.data?.latestYear
+    const [selectedYear, setSelectedYear] = useState(null)
+    const assessmentYears = useMemo(() => [...(years.data?.years || [])].sort((a, b) => b - a), [years.data])
+    const year = assessmentYears.includes(selectedYear) ? selectedYear : years.data?.latestYear
     const scale = years.data?.classificationScale
     const scores = useDpatScores(year)
 
@@ -48,7 +50,19 @@ const HomeDpatHighlight = () => {
                         <h2 id="home-dpat-title">How districts performed{year ? ` in ${year}` : ''}</h2>
                         <p>Official final results from the District Performance Assessment Tool (DPAT), published for every assessed district.</p>
                     </div>
-                    <Link className="pt-button pt-button--secondary" to="/dpat/performance-analysis">Full DPAT analysis</Link>
+                    <div className="home-dpat__actions">
+                        {assessmentYears.length > 0 && (
+                            <label className="home-dpat__year">
+                                <span>Assessment year</span>
+                                <select value={year ?? ''} onChange={(event) => setSelectedYear(Number(event.target.value))}>
+                                    {assessmentYears.map((item) => <option key={item} value={item}>{item}</option>)}
+                                </select>
+                            </label>
+                        )}
+                        <Link className="pt-button pt-button--secondary" to={year ? `/dpat/performance-analysis?year=${year}` : '/dpat/performance-analysis'}>
+                            Full DPAT analysis
+                        </Link>
+                    </div>
                 </PublicMotionItem>
 
                 <PublicMotionItem className="home-dpat__grid">
@@ -115,7 +129,7 @@ const HomeDpatHighlight = () => {
                                 {Array.from({ length: 5 }, (_, index) => <span key={index} />)}
                             </div>
                         )}
-                        <Link className="pt-link" to="/dpat/performance-analysis?view=rankings">
+                        <Link className="pt-link" to={`/dpat/performance-analysis?view=rankings${year ? `&year=${year}` : ''}`}>
                             See all district rankings
                             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
                         </Link>

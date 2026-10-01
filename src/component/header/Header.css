@@ -123,6 +123,10 @@
 .hero-map-tip__rows i.is-navy { background: #8ea9d0; }
 .hero-map-tip__rows i.is-gold { background: #e2b85a; }
 .hero-map-tip__rows i.is-green { background: #4cc28c; }
+.hero-map-tip__rows i.is-sky { background: #7cc4f0; }
+.hero-map-tip__rows i.is-teal { background: #5fd1c1; }
+.hero-map-tip__rows i.is-rose { background: #f19a8f; }
+.hero-map-tip__rows div.is-divided { margin-top: 4px; padding-top: 7px; border-top: 1px solid rgba(255, 255, 255, 0.16); }
 .hero-map-tip__foot { display: block; margin-top: 10px; color: rgba(255, 255, 255, 0.6); font-size: 0.72rem; font-weight: 600; }
 
 .hero-visual__path {

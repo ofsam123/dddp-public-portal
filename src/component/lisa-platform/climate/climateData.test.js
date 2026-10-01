@@ -1,4 +1,14 @@
-import { buildClimateIndex, plausibleAffected, shortDistrict, summarise } from './climateData'
+import {
+    buildClimateIndex,
+    keyFindings,
+    plausibleAffected,
+    regionBreakdown,
+    shortDistrict,
+    summarise,
+    topPlaces,
+    typeLevelMatrix,
+    validCoordinates,
+} from './climateData'
 
 const data = {
     places: [
@@ -42,5 +52,28 @@ describe('climateData', () => {
         expect(summary).toMatchObject({ records: 2, communities: 1, districts: 2, affected: 400, unverified: 1, withPhotos: 1 })
         expect(summary.levels.map((level) => level.total)).toEqual([1, 0, 1])
         expect(summary.years).toEqual([{ year: 2024, total: 1 }, { year: 2025, total: 1 }])
+        expect(summary.months.find((item) => item.month === 6).total).toBe(1)
+        expect(summary.months.find((item) => item.month === 1).total).toBe(1)
+    })
+
+    it('keeps only coordinates inside Ghana', () => {
+        expect(validCoordinates([-2.03, 5.87])).toEqual([-2.03, 5.87])
+        expect(validCoordinates([0.901, 0.00033])).toBeNull()
+        expect(validCoordinates(null)).toBeNull()
+    })
+
+    it('builds regional, place and severity breakdowns', () => {
+        const { rows } = buildClimateIndex(data)
+        expect(regionBreakdown(rows).map((region) => [region.name, region.records, region.high])).toEqual([
+            ['Greater Accra Region', 1, 0],
+            ['Western Region', 1, 1],
+        ])
+        expect(topPlaces(rows)[0]).toMatchObject({ name: 'Abennieso', records: 1, affected: 400, topType: 'Flooding' })
+        const matrix = typeLevelMatrix(rows)
+        expect(matrix.columns).toEqual(['High', 'Medium', 'Low', null])
+        expect(matrix.types.find((type) => type.name === 'Flooding').cells[0].total).toBe(1)
+        const findings = keyFindings(rows, summarise(rows))
+        expect(findings.map((item) => item.key)).toEqual(['type', 'month', 'region', 'high'])
+        expect(findings.find((item) => item.key === 'high').value).toBe('50%')
     })
 })

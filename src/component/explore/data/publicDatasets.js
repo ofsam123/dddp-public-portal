@@ -3,8 +3,9 @@ export const DEFAULT_PUBLIC_DATASET = 'projects-programmes'
 export const PUBLIC_DATASETS = [
     { key: 'projects-programmes', label: 'Projects & Programmes', status: 'available', capabilities: ['headline', 'analysis', 'geography'] },
     { key: 'aap', label: 'Annual Action Plan', status: 'available', capabilities: ['headline', 'analysis', 'geography'] },
-    { key: 'igf', label: 'Internally Generated Fund', status: 'pending', capabilities: [] },
+    { key: 'igf', label: 'Internally Generated Fund', status: 'available', capabilities: ['headline', 'analysis', 'geography'] },
     { key: 'meetings', label: 'Meetings', status: 'available', capabilities: ['headline', 'analysis', 'geography'] },
+    { key: 'schools', label: 'School Profile Tracker', status: 'available', capabilities: ['headline', 'analysis', 'geography'] },
     { key: 'pwda-programmes', label: 'PWDAs Programmes', status: 'pending-year-rule', capabilities: ['geography'] },
 ]
 

@@ -13,7 +13,9 @@ import usePublicYear from './hooks/usePublicYear'
 import useProjectProgrammeView from './hooks/useProjectProgrammeView'
 import useRegionalSummaries from './hooks/useRegionalSummaries'
 import useNationalTrend from './hooks/useNationalTrend'
+import { useDeliverySeries } from './hooks/useScopedResource'
 import { ExploreNext, ExploreRegionalPlots, ExploreTrends } from './components/ExploreInsights'
+import { DrillDownExplorer, GeographyDepth } from './components/ExploreDepth'
 import {
     getDistrictBySlug,
     getDistricts,
@@ -104,8 +106,10 @@ const GeographyTemplate = ({ geography, geographyData, region, district, distric
                     <h2>{geography.name} at a glance</h2>
                     <p>{publicDataset.key === 'projects-programmes' ? 'Projects and programmes whose expected implementation period overlaps the selected year.' : publicDataset.dataset.label + ' for this geography and selected year.'}</p>
                 </div>
-                <DatasetSummary dataset={publicDataset.dataset} geography={geography} region={region} year={publicYear.year} projectSummary={summary} comparisons={comparisons} isProjectLoading={isLoading} />
+                <DatasetSummary dataset={publicDataset.dataset} geography={geography} region={region} year={publicYear.year} projectSummary={summary} comparisons={comparisons} isProjectLoading={isLoading} withYear={publicYear.withYear} />
             </section>
+
+            <GeographyDepth geography={geography} region={region} year={publicYear.year} withYear={publicYear.withYear} />
 
             {geography.level === 'national' && (
                 <GeographyBrowser
@@ -210,6 +214,7 @@ export const ExploreLanding = () => {
     const publicDataset = usePublicDataset()
     const projectProgrammeView = useProjectProgrammeView()
     const trend = useNationalTrend({ year: publicYear.year, years: publicYear.years })
+    const deliverySeries = useDeliverySeries({ years: trend.years })
     const regional = useRegionalSummaries({ year: publicYear.year })
 
     return (
@@ -233,7 +238,7 @@ export const ExploreLanding = () => {
                 source={publicYear.availability?.source}
                 retrievedAt={publicYear.availability?.retrievedAt}
             />
-            <ExploreTrends year={publicYear.year} trend={trend} />
+            <ExploreTrends year={publicYear.year} trend={trend} delivery={deliverySeries} />
             <GeographyBrowser
                 title="Choose where to start"
                 description="Hover a region to preview its activity, or select it to go deeper."
@@ -244,6 +249,7 @@ export const ExploreLanding = () => {
                 projectProgrammeView={projectProgrammeView.view}
                 onProjectProgrammeViewChange={projectProgrammeView.setView}
             />
+            <DrillDownExplorer year={publicYear.year} geographyData={geographyData} withYear={publicYear.withYear} />
             <ExploreRegionalPlots year={publicYear.year} regional={regional} trend={trend} withYear={publicYear.withYear} />
             <ExploreNext withYear={publicYear.withYear} />
         </PageShell>

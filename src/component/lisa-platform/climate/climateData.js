@@ -7,6 +7,27 @@ export const RISK_LEVELS = [
     { key: 'Low', color: '#1f8f5f', soft: '#e8f5ee' },
 ]
 
+export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+export const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+// Southern Ghana's rainfall pattern: major season April–July, minor season September–November.
+export const RAINY_SEASONS = [
+    { key: 'major', label: 'Major rainy season', months: [4, 5, 6, 7] },
+    { key: 'minor', label: 'Minor rainy season', months: [9, 10, 11] },
+]
+
+const GHANA_BOUNDS = { minLng: -3.4, maxLng: 1.4, minLat: 4.5, maxLat: 11.3 }
+
+export const validCoordinates = (coordinates) => {
+    if (!Array.isArray(coordinates) || coordinates.length < 2) return null
+    const [lng, lat] = coordinates.map(Number)
+    const inside = lng >= GHANA_BOUNDS.minLng && lng <= GHANA_BOUNDS.maxLng && lat >= GHANA_BOUNDS.minLat && lat <= GHANA_BOUNDS.maxLat
+    return inside ? [lng, lat] : null
+}
+
+export const regionKey = (name) => String(name || '').replace(/\s+Region$/i, '').trim().toLowerCase()
+
+export const placeLabel = (place) => (place.isDistrictWide ? place.districtLabel : place.name)
+
 export const shortDistrict = (name) => String(name || '')
     .replace(/\s+District Assembly$/i, '')
     .replace(/\s+Assembly$/i, '')
@@ -52,6 +73,8 @@ export const buildClimateIndex = ({ places = [], risks = [], records = [] } = {}
                 livelihood: risk?.livelihood || null,
                 distanceKm: risk?.distanceKm ?? null,
                 remarks: sentenceCase(record.remarks),
+                coordinates: validCoordinates(record.coordinates),
+                month: record.date ? Number(record.date.slice(5, 7)) : null,
                 affected: plausibleAffected(record.affectedPersons),
                 affectedUnverified: record.affectedPersons !== null && plausibleAffected(record.affectedPersons) === null,
                 year: record.date ? Number(record.date.slice(0, 4)) : null,
@@ -115,5 +138,84 @@ export const summarise = (rows) => {
         years,
         latest: rows.map((row) => row.date).filter(Boolean).sort().pop() || null,
         earliest: rows.map((row) => row.date).filter(Boolean).sort()[0] || null,
+        months: MONTHS.map((label, index) => ({ month: index + 1, label, total: rows.filter((row) => row.month === index + 1).length })),
     }
+}
+
+export const typeLevelMatrix = (rows, limit = 8) => {
+    const columns = [...RISK_LEVELS.map((level) => level.key), null]
+    const byType = new Map()
+    rows.forEach((row) => {
+        if (!byType.has(row.type)) byType.set(row.type, { name: row.type, total: 0, cells: new Map(columns.map((key) => [key, 0])) })
+        const entry = byType.get(row.type)
+        entry.total += 1
+        entry.cells.set(row.riskLevel, (entry.cells.get(row.riskLevel) || 0) + 1)
+    })
+    const types = [...byType.values()]
+        .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name))
+        .slice(0, limit)
+        .map((entry) => ({ name: entry.name, total: entry.total, cells: columns.map((key) => ({ level: key, total: entry.cells.get(key) || 0 })) }))
+    return { columns, types, max: Math.max(1, ...types.flatMap((entry) => entry.cells.map((cell) => cell.total))) }
+}
+
+const UNCLASSIFIED = 'Unclassified'
+
+const topBy = (map) => {
+    const ranked = [...map.entries()].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])))
+    return (ranked.find(([key]) => key !== UNCLASSIFIED) || ranked[0])?.[0] || null
+}
+
+const groupStats = (rows, keyOf, describe) => {
+    const groups = new Map()
+    rows.forEach((row) => {
+        const key = keyOf(row)
+        if (!groups.has(key)) groups.set(key, { key, ...describe(row), records: 0, high: 0, affected: 0, types: new Map(), places: new Set(), latest: null })
+        const group = groups.get(key)
+        group.records += 1
+        if (row.riskLevel === 'High') group.high += 1
+        if (row.affected !== null) group.affected += row.affected
+        group.types.set(row.type, (group.types.get(row.type) || 0) + 1)
+        if (!row.place.isDistrictWide) group.places.add(row.place.id)
+        if (row.date && (!group.latest || row.date > group.latest)) group.latest = row.date
+    })
+    return [...groups.values()].map(({ types, places, ...group }) => ({ ...group, communities: places.size, topType: topBy(types) }))
+}
+
+export const regionBreakdown = (rows) => groupStats(
+    rows,
+    (row) => row.place.regionId,
+    (row) => ({ id: row.place.regionId, name: row.place.regionName }),
+).sort((a, b) => b.records - a.records || a.name.localeCompare(b.name))
+
+export const topPlaces = (rows, limit = 8) => groupStats(
+    rows,
+    (row) => row.place.id,
+    (row) => ({ place: row.place, name: placeLabel(row.place) }),
+).sort((a, b) => b.records - a.records || b.affected - a.affected || a.name.localeCompare(b.name)).slice(0, limit)
+
+export const keyFindings = (rows, summary) => {
+    if (!rows.length) return []
+    const findings = []
+    const topType = summary.types.find((item) => item.name !== UNCLASSIFIED) || summary.types[0]
+    if (topType) {
+        findings.push({ key: 'type', label: 'Most recorded risk', value: topType.name, detail: `${topType.total} of ${summary.records} records (${Math.round((topType.total / summary.records) * 100)}%)` })
+    }
+    const dated = summary.months.reduce((sum, item) => sum + item.total, 0)
+    const peak = [...summary.months].sort((a, b) => b.total - a.total)[0]
+    if (peak?.total) {
+        const major = summary.months.filter((item) => RAINY_SEASONS[0].months.includes(item.month)).reduce((sum, item) => sum + item.total, 0)
+        findings.push({ key: 'month', label: 'Peak month', value: MONTH_NAMES[peak.month - 1], detail: `${Math.round((major / dated) * 100)}% of events fall in April–July` })
+    }
+    const regions = regionBreakdown(rows)
+    if (regions.length > 1) {
+        findings.push({ key: 'region', label: 'Most records', value: regions[0].name, detail: `${regions[0].records} records from ${regions[0].communities} communities` })
+    } else {
+        const places = topPlaces(rows, 1)
+        if (places[0]) findings.push({ key: 'region', label: 'Most records', value: places[0].name, detail: `${places[0].records} ${places[0].records === 1 ? 'record' : 'records'}` })
+    }
+    const high = summary.levels.find((level) => level.key === 'High')
+    if (high) {
+        findings.push({ key: 'high', label: 'Rated high risk', value: `${Math.round((high.total / summary.records) * 100)}%`, detail: `${high.total} records need the most attention` })
+    }
+    return findings
 }
